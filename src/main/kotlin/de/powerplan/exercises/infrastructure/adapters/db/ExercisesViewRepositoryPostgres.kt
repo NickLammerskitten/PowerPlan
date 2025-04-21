@@ -30,7 +30,41 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
         """.trimIndent())
 
         return dataSource.from("exercises")
-            .select(columns)
+            .select(columns = columns) {
+                range(queryFilters.pageable.offset()..queryFilters.pageable.limit())
+                filter {
+                    if (queryFilters.fullTextSearch.isNotBlank()) {
+                        val fullTextSearch = queryFilters.fullTextSearch.trimIndent().lowercase()
+                        or {
+                            ilike("name", "%${fullTextSearch}%")
+                        }
+                    }
+
+                    if (queryFilters.difficultyLevels != null) {
+                        or {
+                            queryFilters.difficultyLevels.forEach { difficultyLevel ->
+                                eq("difficulty_level", difficultyLevel)
+                            }
+                        }
+                    }
+
+                    if (queryFilters.bodySections != null) {
+                        or {
+                            queryFilters.bodySections.forEach { bodySection ->
+                                eq("body_section", bodySection)
+                            }
+                        }
+                    }
+
+                    if (queryFilters.classifications != null) {
+                        or {
+                            queryFilters.classifications.forEach { classification ->
+                                eq("classification", classification)
+                            }
+                        }
+                    }
+                }
+            }
             .decodeList<ExerciseDbEntity>()
             .map(ExerciseDbEntity::toDomain)
     }
