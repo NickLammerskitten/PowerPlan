@@ -16,5 +16,4 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
             .decodeList<ExerciseDbEntity>()
             .map { it.toDomain() }
     }
-
 }
