@@ -1,9 +1,9 @@
 package de.powerplan.exercises.domain
 
 enum class BodySection {
+    UPPER_BODY,
     MIDSECTION,
     LOWER_BODY,
-    UPPER_BODY,
     FULL_BODY,
     UNSORTED
 }

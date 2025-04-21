@@ -14,7 +14,6 @@ class Exercise(
     val secondaryMuscles: List<InvolvedMuscle>,
     val primaryEquipment: Equipment,
     val secondaryEquipment: Equipment?,
-    val grip: Grip,
     val bodySection: BodySection,
     val classification: Classification
 ) {
@@ -47,7 +46,6 @@ class Exercise(
                 secondaryMuscles = exerciseDto.secondaryMuscles,
                 primaryEquipment = primaryEquipment,
                 secondaryEquipment = secondaryEquipment,
-                grip = exerciseDto.grip,
                 bodySection = exerciseDto.bodySection,
                 classification = exerciseDto.classification
             )

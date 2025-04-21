@@ -2,7 +2,6 @@ package de.powerplan.exercises.infrastructure.adapters.db.entity
 
 import de.powerplan.exercises.application.dto.ExerciseDto
 import de.powerplan.exercises.domain.DifficultyLevel
-import de.powerplan.exercises.domain.Grip
 import de.powerplan.exercises.domain.BodySection
 import de.powerplan.exercises.domain.Classification
 import kotlinx.serialization.Serializable
@@ -18,7 +17,6 @@ data class ExerciseDbEntity(
     val muscles: List<ExerciseMuscleDbEntity>,
     val primaryEquipmentId: String,
     val secondaryEquipmentId: String? = null,
-    val grip: Grip,
     val bodySection: BodySection,
     val classification: Classification
 ) {
@@ -40,7 +38,6 @@ data class ExerciseDbEntity(
             secondaryMuscles = secondaryMuscles,
             primaryEquipmentId = UUID.fromString(primaryEquipmentId),
             secondaryEquipmentId = UUID.fromString(secondaryEquipmentId),
-            grip = grip,
             bodySection = bodySection,
             classification = classification
         )
