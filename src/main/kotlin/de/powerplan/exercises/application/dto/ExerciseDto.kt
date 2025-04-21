@@ -10,8 +10,8 @@ import java.util.UUID
 class ExerciseDto(
     val id: UUID,
     val name: String,
-    val shortVideoUrl: String,
-    val longVideoUrl: String,
+    val shortVideoUrl: String?,
+    val longVideoUrl: String?,
     val difficultyLevel: DifficultyLevel,
     val primeMoverMuscleType: InvolvedMuscle,
     val secondaryMuscles: List<InvolvedMuscle>,

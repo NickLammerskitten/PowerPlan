@@ -11,8 +11,8 @@ import java.util.UUID
 data class ExerciseDbEntity(
     val id: String,
     val name: String,
-    val shortVideoUrl: String,
-    val longVideoUrl: String,
+    val shortVideoUrl: String? = null,
+    val longVideoUrl: String? = null,
     val difficultyLevel: DifficultyLevel,
     val muscles: List<ExerciseMuscleDbEntity>,
     val primaryEquipmentId: String,
@@ -28,6 +28,9 @@ data class ExerciseDbEntity(
         val secondaryMuscles = muscles.filter { it.role == MuscleRole.SECONDARY }
             .map { it.toDomain() }
 
+        val primaryEquipmentId = UUID.fromString(primaryEquipmentId)
+        val secondaryEquipmentId = secondaryEquipmentId?.let { UUID.fromString(it) }
+
         return ExerciseDto(
             id = UUID.fromString(id),
             name = name,
@@ -36,8 +39,8 @@ data class ExerciseDbEntity(
             difficultyLevel = difficultyLevel,
             primeMoverMuscleType = primeMoverMuscleType,
             secondaryMuscles = secondaryMuscles,
-            primaryEquipmentId = UUID.fromString(primaryEquipmentId),
-            secondaryEquipmentId = UUID.fromString(secondaryEquipmentId),
+            primaryEquipmentId = primaryEquipmentId,
+            secondaryEquipmentId = secondaryEquipmentId,
             bodySection = bodySection,
             classification = classification
         )
