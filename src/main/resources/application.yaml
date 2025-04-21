@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: powerplan
+
+  supabase:
+    url: ${POWERPLAN_SUPABASE_URL}
+    key: ${POWERPLAN_SUPABASE_ANON_KEY}
+    schema: public

@@ -6,13 +6,13 @@ import java.util.UUID
 
 @Serializable
 data class EquipmentDbEntity(
-    val id: UUID,
+    val id: String,
     val name: String
 ) {
 
     fun toDomain(): Equipment {
         return Equipment(
-            id = id,
+            id = UUID.fromString(id),
             name = name
         )
     }

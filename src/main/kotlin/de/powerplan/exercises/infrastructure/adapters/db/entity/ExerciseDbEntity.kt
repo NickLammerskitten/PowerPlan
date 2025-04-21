@@ -10,14 +10,14 @@ import java.util.UUID
 
 @Serializable
 data class ExerciseDbEntity(
-    val id: UUID,
+    val id: String,
     val name: String,
     val shortVideoUrl: String,
     val longVideoUrl: String,
     val difficultyLevel: DifficultyLevel,
     val muscles: List<ExerciseMuscleDbEntity>,
-    val primaryEquipmentId: UUID,
-    val secondaryEquipmentId: UUID? = null,
+    val primaryEquipmentId: String,
+    val secondaryEquipmentId: String? = null,
     val grip: Grip,
     val bodySection: BodySection,
     val classification: Classification
@@ -31,15 +31,15 @@ data class ExerciseDbEntity(
             .map { it.toDomain() }
 
         return ExerciseDto(
-            id = id,
+            id = UUID.fromString(id),
             name = name,
             shortVideoUrl = shortVideoUrl,
             longVideoUrl = longVideoUrl,
             difficultyLevel = difficultyLevel,
             primeMoverMuscleType = primeMoverMuscleType,
             secondaryMuscles = secondaryMuscles,
-            primaryEquipmentId = primaryEquipmentId,
-            secondaryEquipmentId = secondaryEquipmentId,
+            primaryEquipmentId = UUID.fromString(primaryEquipmentId),
+            secondaryEquipmentId = UUID.fromString(secondaryEquipmentId),
             grip = grip,
             bodySection = bodySection,
             classification = classification
