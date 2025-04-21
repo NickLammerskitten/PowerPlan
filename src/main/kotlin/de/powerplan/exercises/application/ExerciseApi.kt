@@ -4,6 +4,7 @@ import de.powerplan.exercises.application.view.query.ExercisesQueryFilters
 import de.powerplan.exercises.domain.Exercise
 import de.powerplan.shared.EquipmentResolver
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 class ExerciseApi(
@@ -25,5 +26,17 @@ class ExerciseApi(
                 equipmentList = equipmentMap
             )
         }
+    }
+
+    suspend fun exercise(id: UUID): Exercise? {
+        val exerciseDto = exercisesViewRepository.findExerciseById(id) ?: return null
+
+        val allEquipmentIds = listOfNotNull(exerciseDto.primaryEquipmentId, exerciseDto.secondaryEquipmentId)
+        val equipmentMap = equipmentResolver.findEquipmentsByIds(allEquipmentIds)
+
+        return Exercise.create(
+            exerciseDto = exerciseDto,
+            equipmentList = equipmentMap
+        )
     }
 }

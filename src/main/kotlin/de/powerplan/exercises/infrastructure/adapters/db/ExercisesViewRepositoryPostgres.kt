@@ -8,26 +8,12 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : ExercisesViewRepository {
     override suspend fun findExercises(queryFilters: ExercisesQueryFilters): List<ExerciseDto> {
-        val columns = Columns.raw("""
-            id,
-            name,
-            shortVideoUrl: short_video_url,
-            longVideoUrl: long_video_url,
-            difficultyLevel: difficulty_level,
-            primaryEquipmentId: primary_equipment_id,
-            secondaryEquipmentId: secondary_equipment_id,
-            bodySection: body_section,
-            classification,
-            muscles: exercises_muscles (
-                muscleGroup: muscle_group,
-                intensity,
-                role
-            ) 
-        """.trimIndent())
+        val columns = exerciseColumns()
 
         return dataSource.from("exercises")
             .select(columns = columns) {
@@ -67,5 +53,37 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
             }
             .decodeList<ExerciseDbEntity>()
             .map(ExerciseDbEntity::toDomain)
+    }
+
+    override suspend fun findExerciseById(id: UUID): ExerciseDto? {
+        val columns = exerciseColumns()
+
+        return dataSource.from("exercises")
+            .select(columns = columns) {
+                filter {
+                    ExerciseDbEntity::id eq id
+                }
+            }
+            .decodeSingleOrNull<ExerciseDbEntity>()
+            ?.toDomain()
+    }
+
+    private fun exerciseColumns(): Columns {
+        return Columns.raw("""
+            id,
+            name,
+            shortVideoUrl: short_video_url,
+            longVideoUrl: long_video_url,
+            difficultyLevel: difficulty_level,
+            primaryEquipmentId: primary_equipment_id,
+            secondaryEquipmentId: secondary_equipment_id,
+            bodySection: body_section,
+            classification,
+            muscles: exercises_muscles (
+                muscleGroup: muscle_group,
+                intensity,
+                role
+            ) 
+        """.trimIndent())
     }
 }
