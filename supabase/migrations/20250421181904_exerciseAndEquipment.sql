@@ -18,7 +18,7 @@ create type public."MuscleRole" as enum ('PRIMARY', 'SECONDARY');
 alter type public."MuscleRole" owner to postgres;
 
 -- Setup TABLE: Equipment
-create table public.equipment
+create table public.equipments
 (
     id   uuid default gen_random_uuid() not null
         primary key,
@@ -41,7 +41,7 @@ grant delete, insert, references, select, trigger, truncate, update on public.eq
 
 -- Setup TABLE: Exercise
 
-create table public.exercise
+create table public.exercises
 (
     id                     uuid default gen_random_uuid() not null
         primary key,
@@ -75,7 +75,7 @@ grant delete, insert, references, select, trigger, truncate, update on public.ex
 
 -- Setup TABLE: ExerciseMuscle
 
-create table public.exercise_muscle
+create table public.exercises_muscles
 (
     exercise_id  uuid             not null
         references public.exercises
