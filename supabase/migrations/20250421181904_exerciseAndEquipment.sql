@@ -82,7 +82,7 @@ create table public.exercises_muscles
             on update cascade on delete cascade,
     muscle_group "MuscleGroup"    not null,
     intensity    "IntensityLevel" not null,
-    muscle_role  "MuscleRole"     not null,
+    role  "MuscleRole"     not null,
     primary key (exercise_id, muscle_group)
 );
 

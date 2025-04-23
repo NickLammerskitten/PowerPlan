@@ -104,7 +104,7 @@ WITH ${tempVarName} AS (
             INSERT INTO exercises_muscles (exercise_id,
                                            muscle_group,
                                            intensity,
-                                           muscle_role)
+                                           role)
             VALUES
                 ${muscleValues};
         `;
