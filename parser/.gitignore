@@ -1,0 +1,5 @@
+./node_modules
+
+dataSourceConverted.csv
+exercise_import.sql
+parsed_exercises.json
