@@ -1,9 +1,9 @@
 package de.powerplan.exercises.infrastructure.adapters.db.entity
 
 import de.powerplan.exercises.application.dto.ExerciseDto
-import de.powerplan.exercises.domain.DifficultyLevel
+import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.exercises.domain.BodySection
-import de.powerplan.exercises.domain.Classification
+import de.powerplan.shareddomain.Classification
 import kotlinx.serialization.Serializable
 import java.util.UUID
 

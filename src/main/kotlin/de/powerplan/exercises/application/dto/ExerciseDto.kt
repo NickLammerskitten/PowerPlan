@@ -1,9 +1,9 @@
 package de.powerplan.exercises.application.dto
 
 import de.powerplan.exercises.domain.BodySection
-import de.powerplan.exercises.domain.DifficultyLevel
+import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.exercises.domain.InvolvedMuscle
-import de.powerplan.exercises.domain.Classification
+import de.powerplan.shareddomain.Classification
 
 import java.util.UUID
 

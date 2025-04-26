@@ -1,4 +1,4 @@
-package de.powerplan.exercises.domain
+package de.powerplan.shareddomain
 
 enum class Classification {
     POSTURAL,

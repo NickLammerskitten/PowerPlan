@@ -2,9 +2,9 @@ package de.powerplan.exercises.infrastructure.adapters.rest
 
 import de.powerplan.exercises.application.ExerciseApi
 import de.powerplan.exercises.application.view.query.ExercisesQueryFilters
-import de.powerplan.exercises.domain.Classification
+import de.powerplan.shareddomain.Classification
 import de.powerplan.exercises.domain.BodySection
-import de.powerplan.exercises.domain.DifficultyLevel
+import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.exercises.domain.Exercise
 import de.powerplan.shared.Pageable
 import io.swagger.v3.oas.annotations.Operation

@@ -1,6 +1,8 @@
 package de.powerplan.exercises.domain
 
 import de.powerplan.exercises.application.dto.ExerciseDto
+import de.powerplan.shareddomain.Classification
+import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.shareddomain.Equipment
 import java.util.UUID
 
