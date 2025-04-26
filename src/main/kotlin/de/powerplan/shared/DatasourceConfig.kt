@@ -1,6 +1,7 @@
 package de.powerplan.shared
 
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.PropertyConversionMethod
@@ -18,6 +19,11 @@ class DatasourceConfig(properties: PowerplanDataSourceProperties) {
         install(Postgrest) {
             defaultSchema = properties.schema
             propertyConversionMethod = PropertyConversionMethod.CAMEL_CASE_TO_SNAKE_CASE
+        }
+
+        install(Auth) {
+            alwaysAutoRefresh = true
+            enableLifecycleCallbacks = false
         }
     }
 
