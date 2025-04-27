@@ -1,7 +1,7 @@
 package de.powerplan.exercises.infrastructure.adapters.rest
 
 import de.powerplan.exercises.application.ExerciseApi
-import de.powerplan.exercises.application.view.query.ExercisesQueryFilters
+import de.powerplan.exercises.application.views.query.ExercisesQueryFilters
 import de.powerplan.shareddomain.Classification
 import de.powerplan.exercises.domain.BodySection
 import de.powerplan.shareddomain.DifficultyLevel

@@ -1,4 +1,4 @@
-package de.powerplan.exercises.application.view.query
+package de.powerplan.exercises.application.views.query
 
 import de.powerplan.exercises.domain.BodySection
 import de.powerplan.shareddomain.Classification
