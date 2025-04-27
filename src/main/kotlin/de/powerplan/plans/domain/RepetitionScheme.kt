@@ -1,7 +1,7 @@
 package de.powerplan.plans.domain
 
 sealed class RepetitionScheme {
-    data class Fixes(val reps: Int) : RepetitionScheme() {
+    data class Fixed(val reps: Int) : RepetitionScheme() {
         init {
             require(reps >= 0) { "RepetitionScheme must be positive." }
         }
@@ -15,4 +15,10 @@ sealed class RepetitionScheme {
 
     // As much reps as possible
     data object AMRAP : RepetitionScheme()
+}
+
+enum class RepetitionSchemeType {
+    FIXED,
+    RANGE,
+    AMRAP
 }

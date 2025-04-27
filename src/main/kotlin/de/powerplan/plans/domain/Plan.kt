@@ -22,13 +22,12 @@ data class Plan(
         }
     }
 
-
     companion object {
         fun initialize(
             name: String,
-            weeks: List<Week>,
             difficultyLevel: DifficultyLevel?,
             classifications: List<Classification>,
+            weeks: List<Week>
         ) = this.create(
             name = name,
             difficultyLevel = difficultyLevel,

@@ -1,7 +1,9 @@
 package de.powerplan.plans.domain
 
+import de.powerplan.shared.Index
+
 data class Week(
-    val index: Int,
+    val index: Index,
     val trainingDays: List<TrainingDay>
 ) {
 
@@ -10,7 +12,7 @@ data class Week(
             index: Int,
             trainingDays: List<TrainingDay>
         ) = Week(
-            index = index,
+            index = Index.of(index),
             trainingDays = trainingDays
         )
     }

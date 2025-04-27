@@ -1,17 +1,22 @@
 package de.powerplan.plans.domain
 
+import de.powerplan.shared.Index
+
 data class SetEntry(
-    val index: Int,
-    val repetitions: RepetitionScheme
+    val index: Index,
+    val repetitions: RepetitionScheme,
+    val goal: GoalScheme
 ) {
 
     companion object {
         fun create(
             index: Int,
-            repetitions: RepetitionScheme
+            repetitions: RepetitionScheme,
+            goal: GoalScheme
         ) = SetEntry(
-            index = index,
-            repetitions = repetitions
+            index = Index.of(index),
+            repetitions = repetitions,
+            goal = goal
         )
     }
 }
