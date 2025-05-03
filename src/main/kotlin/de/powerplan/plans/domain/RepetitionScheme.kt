@@ -1,6 +1,11 @@
 package de.powerplan.plans.domain
 
 sealed class RepetitionScheme {
+
+    fun getFixedReps(): Int? = (this as? Fixed)?.reps
+    fun getMinReps(): Int? = (this as? Range)?.min
+    fun getMaxReps(): Int? = (this as? Range)?.max
+
     data class Fixed(val reps: Int) : RepetitionScheme() {
         init {
             require(reps >= 0) { "RepetitionScheme must be positive." }

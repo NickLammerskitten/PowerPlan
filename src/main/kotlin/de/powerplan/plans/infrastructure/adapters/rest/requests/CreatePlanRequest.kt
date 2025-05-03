@@ -22,7 +22,6 @@ data class CreatePlanRequest(
 }
 
 data class CreateTrainingWeekRequest(
-    val index: Int,
     val trainingDays: List<CreateTrainingDayRequest>
 ) {
     fun toCommand() = CreateTrainingWeekCommand(
@@ -31,7 +30,6 @@ data class CreateTrainingWeekRequest(
 }
 
 data class CreateTrainingDayRequest(
-    val index: Int,
     val name: String,
     val exercises: List<CreateExerciseEntryRequest>
 ) {
@@ -56,8 +54,6 @@ data class CreateExerciseEntryRequest(
 }
 
 data class CreateSetEntryRequest(
-    val index: Int,
-
     // repetition
     val repetitionSchemeType: RepetitionSchemeType,
     val fixedReps: Int? = null,

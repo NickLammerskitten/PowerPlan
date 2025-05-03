@@ -1,7 +1,7 @@
 package de.powerplan.plans.infrastructure.adapters.rest
 
 import de.powerplan.plans.application.PlanApi
-import de.powerplan.plans.domain.Plan
+import de.powerplan.plans.application.views.PlanView
 import de.powerplan.plans.infrastructure.adapters.rest.requests.CreatePlanRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -27,7 +27,7 @@ class PlansController(private val planApi: PlanApi) {
     )
     suspend fun createPlan(
         @RequestBody request: CreatePlanRequest
-    ): Plan {
+    ): PlanView {
         val command = request.toCommand()
         return planApi.createPlan(command)
     }

@@ -1,6 +1,12 @@
 package de.powerplan.plans.domain
 
 sealed class GoalScheme {
+
+    fun getRpe(): Int? = (this as? RPE)?.rpe
+    fun getMinRpe(): Int? = (this as? RPERange)?.min
+    fun getMaxRpe(): Int? = (this as? RPERange)?.max
+    fun getPercent1RM(): Int? = (this as? PercentOfOneRM)?.percent
+
     data class RPE(val rpe: Int) : GoalScheme() {
         init {
             require(rpe in 3..10) { "RPE must be between 3 and 10." }

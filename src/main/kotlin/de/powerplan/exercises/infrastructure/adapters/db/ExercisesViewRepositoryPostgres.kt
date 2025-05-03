@@ -2,8 +2,9 @@ package de.powerplan.exercises.infrastructure.adapters.db
 
 import de.powerplan.exercises.application.ExercisesViewRepository
 import de.powerplan.exercises.application.dto.ExerciseDto
-import de.powerplan.exercises.application.view.query.ExercisesQueryFilters
+import de.powerplan.exercises.application.views.query.ExercisesQueryFilters
 import de.powerplan.exercises.infrastructure.adapters.db.entity.ExerciseDbEntity
+import de.powerplan.exercises.infrastructure.adapters.db.entity.ExerciseIdNamePairDbEntity
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -55,6 +56,24 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
             .map(ExerciseDbEntity::toDomain)
     }
 
+    override suspend fun findExerciseNamesByIds(ids: List<UUID>): List<Pair<UUID, String>> {
+        val columns = Columns.raw(
+            """
+            id,
+            name
+        """.trimIndent()
+        )
+
+        return dataSource.from("exercises")
+            .select(columns = columns) {
+                filter {
+                    ExerciseIdNamePairDbEntity::id isIn ids
+                }
+            }
+            .decodeList<ExerciseIdNamePairDbEntity>()
+            .map(ExerciseIdNamePairDbEntity::toDomain)
+    }
+
     override suspend fun findExerciseById(id: UUID): ExerciseDto? {
         val columns = exerciseColumns()
 
@@ -69,7 +88,8 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
     }
 
     private fun exerciseColumns(): Columns {
-        return Columns.raw("""
+        return Columns.raw(
+            """
             id,
             name,
             shortVideoUrl: short_video_url,
@@ -84,6 +104,7 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
                 intensity,
                 role
             ) 
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 }

@@ -28,6 +28,10 @@ class ExerciseApi(
         }
     }
 
+    suspend fun exerciseNamesByIds(ids: List<UUID>): List<Pair<UUID, String>> {
+        return exercisesViewRepository.findExerciseNamesByIds(ids)
+    }
+
     suspend fun exercise(id: UUID): Exercise? {
         val exerciseDto = exercisesViewRepository.findExerciseById(id) ?: return null
 
