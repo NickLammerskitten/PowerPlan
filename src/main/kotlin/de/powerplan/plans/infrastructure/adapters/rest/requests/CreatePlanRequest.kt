@@ -65,7 +65,7 @@ data class CreateSetEntryRequest(
     val rpe: Double? = null,
     val minRpe: Double? = null,
     val maxRpe: Double? = null,
-    val percent1RM: Int? = null
+    val percent1RM: Double? = null
 ) {
     fun toCommand() = CreateSetEntryCommand(
         fixedReps = fixedReps,

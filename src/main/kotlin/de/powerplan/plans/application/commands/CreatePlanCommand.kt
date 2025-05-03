@@ -17,8 +17,8 @@ class CreatePlanCommand(
             name = this.name,
             difficultyLevel = this.difficultyLevel,
             classifications = this.classifications,
-            weeks = this.weeks.mapIndexed { index, createTrainingWeekCommand ->
-                createTrainingWeekCommand.toDomain(index)
+            weeks = this.weeks.map { createTrainingWeekCommand ->
+                createTrainingWeekCommand.toDomain("-1")
             }
         )
     }
@@ -28,11 +28,11 @@ class CreateTrainingWeekCommand(
     val trainingDays: List<CreateTrainingDayCommand>,
 ) {
 
-    fun toDomain(index: Int): Week {
-        return Week.create(
+    fun toDomain(index: String): Week {
+        return Week.initialize(
             index = index,
-            trainingDays = trainingDays.mapIndexed { dayIndex, createTrainingDayCommand ->
-                createTrainingDayCommand.toDomain(dayIndex)
+            trainingDays = trainingDays.map { createTrainingDayCommand ->
+                createTrainingDayCommand.toDomain("-1")
             }
         )
     }
@@ -43,12 +43,12 @@ class CreateTrainingDayCommand(
     val exercises: List<CreateExerciseEntryCommand>,
 ) {
 
-    fun toDomain(index: Int): TrainingDay {
+    fun toDomain(index: String): TrainingDay {
         return TrainingDay.initialize(
             index = index,
             name = this.name,
-            exerciseEntries = this.exercises.mapIndexed { exerciseIndex, createExerciseEntryCommand ->
-                createExerciseEntryCommand.toDomain(exerciseIndex)
+            exerciseEntries = this.exercises.map { createExerciseEntryCommand ->
+                createExerciseEntryCommand.toDomain("-1")
             }
         )
     }
@@ -61,13 +61,13 @@ class CreateExerciseEntryCommand(
     val sets: List<CreateSetEntryCommand>,
 ) {
 
-    fun toDomain(index: Int): ExerciseEntry {
-        return ExerciseEntry.create(
+    fun toDomain(index: String): ExerciseEntry {
+        return ExerciseEntry.initialize(
             index = index,
             exerciseId = this.exerciseId,
-            sets = this.sets.mapIndexed { setIndex, createSetEntryCommand ->
+            sets = this.sets.map { createSetEntryCommand ->
                 createSetEntryCommand.toDomain(
-                    index = setIndex,
+                    index = "-1",
                     repetitionSchemeType = repetitionSchemeType,
                     goalSchemeType = goalSchemeType
                 )
@@ -86,11 +86,11 @@ class CreateSetEntryCommand(
     val rpe: Double? = null,
     val minRpe: Double? = null,
     val maxRpe: Double? = null,
-    val percent1RM: Int? = null
+    val percent1RM: Double? = null
 ) {
 
-    fun toDomain(index: Int, repetitionSchemeType: RepetitionSchemeType, goalSchemeType: GoalSchemeType): SetEntry {
-        return SetEntry.create(
+    fun toDomain(index: String, repetitionSchemeType: RepetitionSchemeType, goalSchemeType: GoalSchemeType): SetEntry {
+        return SetEntry.initialize(
             index = index,
             repetitions = SetEntryFactory.createRepetitionScheme(
                 type = repetitionSchemeType,

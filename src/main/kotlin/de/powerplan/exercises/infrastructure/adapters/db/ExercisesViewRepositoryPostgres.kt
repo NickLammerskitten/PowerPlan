@@ -65,7 +65,7 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
         )
 
         return dataSource.from("exercises")
-            .select(columns = columns) {
+            .select(columns) {
                 filter {
                     ExerciseIdNamePairDbEntity::id isIn ids
                 }

@@ -7,16 +7,17 @@ import de.powerplan.plans.application.views.WeekView
 import de.powerplan.plans.application.views.TrainingDayView
 import de.powerplan.plans.application.views.ExerciseEntryView
 import de.powerplan.plans.domain.Plan
+import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
 import org.springframework.stereotype.Component
 
 @Component
-class PlanApi(private val exerciseViewResolver: DefaultExerciseViewResolver) {
+class PlanApi(private val exerciseViewResolver: DefaultExerciseViewResolver,
+              private val planRepository: PlanRepository) {
 
     suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
        return planToView(
-           // TODO: Implement the logic to save it in the database
-           createPlanCommand.toDomain()
+           planRepository.create(createPlanCommand.toDomain())
        )
     }
 

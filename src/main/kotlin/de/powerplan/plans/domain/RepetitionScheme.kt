@@ -2,6 +2,12 @@ package de.powerplan.plans.domain
 
 sealed class RepetitionScheme {
 
+    fun getType(): RepetitionSchemeType = when (this) {
+        is Fixed -> RepetitionSchemeType.FIXED
+        is Range -> RepetitionSchemeType.RANGE
+        AMRAP -> RepetitionSchemeType.AMRAP
+    }
+
     fun getFixedReps(): Int? = (this as? Fixed)?.reps
     fun getMinReps(): Int? = (this as? Range)?.min
     fun getMaxReps(): Int? = (this as? Range)?.max

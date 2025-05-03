@@ -27,16 +27,16 @@ object SetEntryFactory {
         rpe: Double?,
         minRpe: Double?,
         maxRpe: Double?,
-        percent1RM: Int?
+        percent1RM: Double?
     ): GoalScheme {
         return when (type) {
             GoalSchemeType.RPE -> GoalScheme.RPE(
-                rpe = rpe?.toInt() ?: throw IllegalArgumentException("RPE")
+                rpe = rpe?: throw IllegalArgumentException("RPE")
             )
 
             GoalSchemeType.RPE_RANGE -> GoalScheme.RPERange(
-                min = minRpe?.toInt() ?: throw IllegalArgumentException("MinRPE"),
-                max = maxRpe?.toInt() ?: throw IllegalArgumentException("MaxRPE")
+                min = minRpe ?: throw IllegalArgumentException("MinRPE"),
+                max = maxRpe ?: throw IllegalArgumentException("MaxRPE")
             )
 
             GoalSchemeType.PERCENT_OF_1RM -> GoalScheme.PercentOfOneRM(
