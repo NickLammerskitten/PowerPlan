@@ -10,18 +10,21 @@ import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
-class PlanApi(private val exerciseViewResolver: DefaultExerciseViewResolver,
-              private val planRepository: PlanRepository) {
+class PlanApi(
+    private val exerciseViewResolver: DefaultExerciseViewResolver,
+    private val planRepository: PlanRepository
+) {
 
     suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
-       return planToView(
-           planRepository.create(createPlanCommand.toDomain())
-       )
+        return planToView(
+            planRepository.create(createPlanCommand.toDomain())
+        )
     }
 
-    suspend fun planToView(plan: Plan): PlanView {
+    private suspend fun planToView(plan: Plan): PlanView {
         val exerciseIds = plan.weeks.flatMap { week ->
             week.trainingDays.flatMap { it.exerciseEntries }.map { it.exerciseId }
         }
@@ -53,5 +56,10 @@ class PlanApi(private val exerciseViewResolver: DefaultExerciseViewResolver,
                 )
             }
         )
+    }
+
+    suspend fun getPlan(id: UUID): PlanView? {
+        val plan = planRepository.findById(id) ?: return null
+        return planToView(plan)
     }
 }
