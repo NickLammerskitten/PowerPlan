@@ -6,6 +6,8 @@ import de.powerplan.plans.application.views.PlanView
 import de.powerplan.plans.application.views.WeekView
 import de.powerplan.plans.application.views.TrainingDayView
 import de.powerplan.plans.application.views.ExerciseEntryView
+import de.powerplan.plans.application.views.PlanListView
+import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
@@ -22,6 +24,23 @@ class PlanApi(
         return planToView(
             planRepository.create(createPlanCommand.toDomain())
         )
+    }
+
+    suspend fun plans(queryFilters: PlanQueryFilters): List<PlanListView> {
+        val planDbEntities = planRepository.findPlans(queryFilters)
+        return planDbEntities.map { planDbEntity ->
+            PlanListView(
+                id = planDbEntity.id,
+                name = planDbEntity.name,
+                difficultyLevel = planDbEntity.difficultyLevel?.name,
+                classifications = planDbEntity.classifications.map(Classification::name)
+            )
+        }
+    }
+
+    suspend fun getPlan(id: UUID): PlanView? {
+        val plan = planRepository.findById(id) ?: return null
+        return planToView(plan)
     }
 
     private suspend fun planToView(plan: Plan): PlanView {
@@ -56,10 +75,5 @@ class PlanApi(
                 )
             }
         )
-    }
-
-    suspend fun getPlan(id: UUID): PlanView? {
-        val plan = planRepository.findById(id) ?: return null
-        return planToView(plan)
     }
 }

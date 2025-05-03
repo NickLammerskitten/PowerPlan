@@ -1,5 +1,6 @@
 package de.powerplan.plans.infrastructure.adapters.db
 
+import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.plans.infrastructure.adapters.db.entity.*
@@ -55,6 +56,22 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
 
             throw ex
         }
+    }
+
+    override suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity> {
+        return dataSource.from("plans")
+            .select(Columns.ALL) {
+                range(queryFilters.pageable.offset()..queryFilters.pageable.limit())
+                filter {
+                    if (queryFilters.fullTextSearch.isNotBlank()) {
+                        val fullTextSearch = queryFilters.fullTextSearch.trimIndent().lowercase()
+                        or {
+                            ilike("name", "%${fullTextSearch}%")
+                        }
+                    }
+                }
+            }
+            .decodeList<PlanDbEntity>()
     }
 
     override suspend fun findById(id: UUID): Plan? {

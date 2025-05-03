@@ -1,8 +1,11 @@
 package de.powerplan.plans.infrastructure.adapters.rest
 
 import de.powerplan.plans.application.PlanApi
+import de.powerplan.plans.application.views.PlanListView
 import de.powerplan.plans.application.views.PlanView
+import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.infrastructure.adapters.rest.requests.CreatePlanRequest
+import de.powerplan.shared.Pageable
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -33,6 +36,31 @@ class PlansController(private val planApi: PlanApi) {
     ): PlanView {
         val command = request.toCommand()
         return planApi.createPlan(command)
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all plans", description = "Get all trainings plans")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Plans retrieved successfully"
+            )
+        ]
+    )
+    suspend fun getPlans(
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "100") size: Int,
+        @RequestParam(value = "fullTextSearch", required = false) fullTextSearch: String?,
+    ): List<PlanListView> {
+        val queryFilters = PlanQueryFilters(
+            pageable = Pageable(
+                page = page,
+                size = size
+            ),
+            fullTextSearch = fullTextSearch ?: "",
+        )
+        return planApi.plans(queryFilters)
     }
 
     @GetMapping("/{id}")

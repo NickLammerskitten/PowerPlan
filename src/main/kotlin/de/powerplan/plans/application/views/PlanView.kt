@@ -3,6 +3,13 @@ package de.powerplan.plans.application.views
 import de.powerplan.plans.domain.ExerciseEntry
 import de.powerplan.plans.domain.SetEntry
 
+class PlanListView(
+    val id: String,
+    val name: String,
+    val difficultyLevel: String?,
+    val classifications: List<String>
+)
+
 class PlanView (
     val id: String,
     val name: String,
