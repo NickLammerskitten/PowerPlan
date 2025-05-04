@@ -9,6 +9,7 @@ import de.powerplan.shared.Pageable
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -82,6 +83,24 @@ class PlansController(private val planApi: PlanApi) {
     )
     suspend fun getPlanById(@PathVariable id: String): PlanView? {
         return planApi.getPlan(UUID.fromString(id))
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a plan", description = "Delete a trainings plan by its ID")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Plan deleted successfully"
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Plan cannot be deleted because it is not a template"
+            )
+        ]
+    )
+    suspend fun deletePlan(@PathVariable id: String) {
+        return planApi.deletePlan(UUID.fromString(id))
     }
 
     @PostMapping("/{id}/start")

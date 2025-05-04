@@ -140,6 +140,14 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
         )
     }
 
+    override suspend fun delete(id: UUID) {
+        dataSource.from("plans").delete {
+            filter {
+                PlanDbEntity::id eq id
+            }
+        }
+    }
+
     private fun planBuilder(
         planDbEntity: PlanDbEntity, weekDbEntities: List<WeekDbEntity>, trainingDayDbEntity: List<TrainingDayDbEntity>,
         exerciseEntryDbEntites: List<ExerciseEntryDbEntity>, setEntryDbEntities: List<SetEntryDbEntity>

@@ -46,6 +46,16 @@ class PlanApi(
         return planToView(plan)
     }
 
+    suspend fun deletePlan(id: UUID) {
+        val plan = planRepository.findById(id) ?: return
+
+        if (!plan.isTemplate) {
+            throw IllegalArgumentException("Cannot delete an active plan. Please finish it.")
+        }
+
+        planRepository.delete(id)
+    }
+
     suspend fun startNewPlan(id: UUID): PlanView {
         val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
 
