@@ -61,7 +61,7 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
     override suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity> {
         return dataSource.from("plans")
             .select(Columns.ALL) {
-                range(queryFilters.pageable.offset()..queryFilters.pageable.limit())
+                range(queryFilters.pageable.range())
                 filter {
                     if (queryFilters.fullTextSearch.isNotBlank()) {
                         val fullTextSearch = queryFilters.fullTextSearch.trimIndent().lowercase()

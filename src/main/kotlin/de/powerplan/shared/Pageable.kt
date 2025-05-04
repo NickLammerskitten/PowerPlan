@@ -9,6 +9,10 @@ class Pageable(
     }
 
     fun limit(): Long {
-        return size.toLong()
+        return size.toLong() - 1
+    }
+
+    fun range(): LongRange {
+        return offset()..(offset()+limit())
     }
 }

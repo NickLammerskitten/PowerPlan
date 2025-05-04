@@ -11,7 +11,11 @@ data class Plan(
     val classifications: List<Classification>,
     val weeks: List<Week>,
     val isTemplate: Boolean,
+    private var _planStatus: PlanStatus? = null
 ) {
+
+    val planStatus: PlanStatus?
+        get() = _planStatus
 
     init {
         require(name.isNotBlank()) {
@@ -20,6 +24,10 @@ data class Plan(
 
         require(weeks.size in 1..18) {
             "Number of weeks must be between 1 and 18"
+        }
+
+        require(isTemplate && _planStatus == null || !isTemplate && _planStatus != null) {
+            "Template plans must not have a status; non-template plans must have one"
         }
     }
 
@@ -45,9 +53,18 @@ data class Plan(
 
         return this.copy(
             id = UUID.randomUUID(),
+            weeks = newWeeks,
             isTemplate = false,
-            weeks = newWeeks
+            _planStatus = PlanStatus.ACTIVE
         )
+    }
+
+    fun finish() {
+        require(!isTemplate) {
+            "A template plan cannot be finished"
+        }
+
+        this._planStatus = PlanStatus.FINISHED
     }
 
     companion object {
@@ -57,6 +74,7 @@ data class Plan(
             classifications: List<Classification>,
             weeks: List<Week>
         ) = this.create(
+            id = UUID.randomUUID(),
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
@@ -64,18 +82,21 @@ data class Plan(
         )
 
         fun create(
+            id: UUID,
             name: String,
             difficultyLevel: DifficultyLevel?,
             classifications: List<Classification>,
             weeks: List<Week>,
-            isTemplate: Boolean = true
+            isTemplate: Boolean = true,
+            planStatus: PlanStatus? = null
         ) = Plan(
-            id = UUID.randomUUID(),
+            id = id,
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
             weeks = weeks,
-            isTemplate = isTemplate
+            isTemplate = isTemplate,
+            _planStatus = planStatus
         )
     }
 }

@@ -7,7 +7,9 @@ class PlanListView(
     val id: String,
     val name: String,
     val difficultyLevel: String?,
-    val classifications: List<String>
+    val classifications: List<String>,
+    val isTemplate: Boolean,
+    val status: String?
 )
 
 class PlanView (
@@ -15,7 +17,9 @@ class PlanView (
     val name: String,
     val difficultyLevel: String?,
     val classifications: List<String>,
-    val weeks: List<WeekView>
+    val weeks: List<WeekView>,
+    val isTemplate: Boolean,
+    val status: String?
 )
 
 class WeekView(

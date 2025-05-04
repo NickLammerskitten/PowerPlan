@@ -33,7 +33,9 @@ class PlanApi(
                 id = planDbEntity.id,
                 name = planDbEntity.name,
                 difficultyLevel = planDbEntity.difficultyLevel?.name,
-                classifications = planDbEntity.classifications.map(Classification::name)
+                classifications = planDbEntity.classifications.map(Classification::name),
+                isTemplate = planDbEntity.isTemplate,
+                status = planDbEntity.status?.name
             )
         }
     }
@@ -83,7 +85,9 @@ class PlanApi(
                         )
                     }
                 )
-            }
+            },
+            isTemplate = plan.isTemplate,
+            status = plan.planStatus?.name
         )
     }
 }

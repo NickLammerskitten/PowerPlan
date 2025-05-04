@@ -18,7 +18,7 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
 
         return dataSource.from("exercises")
             .select(columns = columns) {
-                range(queryFilters.pageable.offset()..queryFilters.pageable.limit())
+                range(queryFilters.pageable.range())
                 filter {
                     if (queryFilters.fullTextSearch.isNotBlank()) {
                         val fullTextSearch = queryFilters.fullTextSearch.trimIndent().lowercase()
