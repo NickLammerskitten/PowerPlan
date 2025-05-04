@@ -14,7 +14,9 @@ class PlanDbEntity(
     val name: String,
     @SerialName("difficulty_level")
     val difficultyLevel: DifficultyLevel?,
-    val classifications: List<Classification>
+    val classifications: List<Classification>,
+    @SerialName("is_template")
+    val isTemplate: Boolean,
 ) {
 
     fun toDomain(weeks: List<Week>): Plan {
@@ -23,7 +25,8 @@ class PlanDbEntity(
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
-            weeks = weeks
+            weeks = weeks,
+            isTemplate = isTemplate
         )
     }
 
@@ -34,6 +37,7 @@ fun Plan.toDbEntity(): PlanDbEntity {
         id = this.id.toString(),
         name = this.name,
         difficultyLevel = this.difficultyLevel,
-        classifications = this.classifications
+        classifications = this.classifications,
+        isTemplate = this.isTemplate
     )
 }

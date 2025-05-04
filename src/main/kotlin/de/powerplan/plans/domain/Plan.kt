@@ -9,7 +9,8 @@ data class Plan(
     val name: String,
     val difficultyLevel: DifficultyLevel?,
     val classifications: List<Classification>,
-    val weeks: List<Week>
+    val weeks: List<Week>,
+    val isTemplate: Boolean,
 ) {
 
     init {
@@ -39,13 +40,15 @@ data class Plan(
             name: String,
             difficultyLevel: DifficultyLevel?,
             classifications: List<Classification>,
-            weeks: List<Week>
+            weeks: List<Week>,
+            isTemplate: Boolean = true
         ) = Plan(
             id = UUID.randomUUID(),
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
-            weeks = weeks
+            weeks = weeks,
+            isTemplate = isTemplate
         )
     }
 }
