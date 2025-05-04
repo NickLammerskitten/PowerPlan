@@ -68,6 +68,10 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
                         or {
                             ilike("name", "%${fullTextSearch}%")
                         }
+
+                        if (queryFilters.onlyTemplates) {
+                            eq("is_template", true)
+                        }
                     }
                 }
             }

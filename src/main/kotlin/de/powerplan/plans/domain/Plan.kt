@@ -23,6 +23,33 @@ data class Plan(
         }
     }
 
+    fun startNew(): Plan {
+        val newWeeks = weeks.map { week ->
+            val newWeekId = UUID.randomUUID()
+            val newTrainingDays = week.trainingDays.map { trainingDay ->
+                val newTrainingDayId = UUID.randomUUID()
+                val newExercises = trainingDay.exerciseEntries.map { exerciseEntry ->
+                    val newExerciseId = UUID.randomUUID()
+                    val newSets = exerciseEntry.sets.map { set ->
+                        set.copy(id = UUID.randomUUID())
+                    }
+
+                    exerciseEntry.copy(id = newExerciseId, sets = newSets)
+                }
+
+                trainingDay.copy(id = newTrainingDayId, exerciseEntries = newExercises)
+            }
+
+            week.copy(id = newWeekId, trainingDays = newTrainingDays)
+        }
+
+        return this.copy(
+            id = UUID.randomUUID(),
+            isTemplate = false,
+            weeks = newWeeks
+        )
+    }
+
     companion object {
         fun initialize(
             name: String,

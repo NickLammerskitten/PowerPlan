@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -52,6 +53,7 @@ class PlansController(private val planApi: PlanApi) {
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "100") size: Int,
         @RequestParam(value = "fullTextSearch", required = false) fullTextSearch: String?,
+        @RequestParam(value = "onlyTemplates", defaultValue = "true", required = false) onlyTemplates: Boolean
     ): List<PlanListView> {
         val queryFilters = PlanQueryFilters(
             pageable = Pageable(
@@ -59,6 +61,7 @@ class PlansController(private val planApi: PlanApi) {
                 size = size
             ),
             fullTextSearch = fullTextSearch ?: "",
+            onlyTemplates = true
         )
         return planApi.plans(queryFilters)
     }
@@ -77,9 +80,25 @@ class PlansController(private val planApi: PlanApi) {
             )
         ]
     )
-    suspend fun getPlanById(
-        @RequestParam id: String
-    ): PlanView? {
+    suspend fun getPlanById(@PathVariable id: String): PlanView? {
         return planApi.getPlan(UUID.fromString(id))
+    }
+
+    @PostMapping("/{id}/start")
+    @Operation(summary = "Start a plan", description = "Start a trainings plan from a given template")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Plan started successfully"
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Plan not found"
+            )
+        ]
+    )
+    suspend fun startPlan(@PathVariable id: String): PlanView {
+        return planApi.startNewPlan(UUID.fromString(id))
     }
 }

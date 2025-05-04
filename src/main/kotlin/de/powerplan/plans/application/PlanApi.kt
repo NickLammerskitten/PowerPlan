@@ -43,6 +43,16 @@ class PlanApi(
         return planToView(plan)
     }
 
+    suspend fun startNewPlan(id: UUID): PlanView {
+        val plan = planRepository.findById(id) ?: throw IllegalArgumentException("Plan with id $id not found")
+
+        val newPlan = plan.startNew()
+
+        return planToView(
+            planRepository.create(newPlan)
+        )
+    }
+
     private suspend fun planToView(plan: Plan): PlanView {
         val exerciseIds = plan.weeks.flatMap { week ->
             week.trainingDays.flatMap { it.exerciseEntries }.map { it.exerciseId }
