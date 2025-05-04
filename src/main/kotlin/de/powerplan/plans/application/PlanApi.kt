@@ -11,6 +11,7 @@ import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
+import io.ktor.server.plugins.NotFoundException
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -22,7 +23,7 @@ class PlanApi(
 
     suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
         return planToView(
-            planRepository.create(createPlanCommand.toDomain())
+            planRepository.upsert(createPlanCommand.toDomain())
         )
     }
 
@@ -46,12 +47,22 @@ class PlanApi(
     }
 
     suspend fun startNewPlan(id: UUID): PlanView {
-        val plan = planRepository.findById(id) ?: throw IllegalArgumentException("Plan with id $id not found")
+        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
 
         val newPlan = plan.startNew()
 
         return planToView(
-            planRepository.create(newPlan)
+            planRepository.upsert(newPlan)
+        )
+    }
+
+    suspend fun finishPlan(id: UUID): PlanView {
+        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
+
+        plan.finish()
+
+        return planToView(
+            planRepository.upsert(plan)
         )
     }
 

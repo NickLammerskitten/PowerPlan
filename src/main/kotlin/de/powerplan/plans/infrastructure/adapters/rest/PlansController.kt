@@ -101,4 +101,22 @@ class PlansController(private val planApi: PlanApi) {
     suspend fun startPlan(@PathVariable id: String): PlanView {
         return planApi.startNewPlan(UUID.fromString(id))
     }
+
+    @PostMapping("/{id}/finish")
+    @Operation(summary = "Finish a plan", description = "Finish a trainings plan")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Plan finished successfully"
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Plan not found"
+            )
+        ]
+    )
+    suspend fun finishPlan(@PathVariable id: String): PlanView {
+        return planApi.finishPlan(UUID.fromString(id))
+    }
 }

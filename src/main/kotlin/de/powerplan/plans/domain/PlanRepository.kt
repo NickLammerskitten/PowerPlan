@@ -6,7 +6,7 @@ import java.util.UUID
 
 interface PlanRepository {
 
-    suspend fun create(plan: Plan): Plan
+    suspend fun upsert(plan: Plan): Plan
     suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity>
     suspend fun findById(id: UUID): Plan?
 

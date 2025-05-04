@@ -12,23 +12,23 @@ import java.util.UUID
 
 @Repository
 class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepository {
-    override suspend fun create(plan: Plan): Plan {
+    override suspend fun upsert(plan: Plan): Plan {
         val planDbEntityDto = plan.toDbEntity()
-        dataSource.from("plans").insert(planDbEntityDto)
+        dataSource.from("plans").upsert(planDbEntityDto)
 
         try {
 
             val weeksDbEntitiesDto = plan.weeks.map {
                 it.toDbEntity(planId = plan.id)
             }
-            dataSource.from("plans_weeks").insert(weeksDbEntitiesDto)
+            dataSource.from("plans_weeks").upsert(weeksDbEntitiesDto)
 
             val trainingDaysDbEntitesDto = plan.weeks.flatMap { week ->
                 week.trainingDays.map { trainingDay ->
                     trainingDay.toDbEntity(weekId = week.id)
                 }
             }
-            dataSource.from("plans_training_days").insert(trainingDaysDbEntitesDto)
+            dataSource.from("plans_training_days").upsert(trainingDaysDbEntitesDto)
 
             val exercisesDbEntitiesDto = plan.weeks.flatMap { week ->
                 week.trainingDays.flatMap { trainingDay ->
@@ -37,7 +37,7 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
                     }
                 }
             }
-            dataSource.from("plans_exercises").insert(exercisesDbEntitiesDto)
+            dataSource.from("plans_exercises").upsert(exercisesDbEntitiesDto)
 
             val setsDbEntitiesDto = plan.weeks.flatMap { week ->
                 week.trainingDays.flatMap { trainingDay ->
@@ -48,7 +48,7 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
                     }
                 }
             }
-            dataSource.from("plans_sets").insert(setsDbEntitiesDto)
+            dataSource.from("plans_sets").upsert(setsDbEntitiesDto)
 
             return this.findById(plan.id) ?: throw IllegalStateException("Plan not found after creation")
         } catch (ex: Exception) {
@@ -86,7 +86,11 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
                     ExerciseEntryDbEntity::id eq id
                 }
             }
-            .decodeSingle<PlanDbEntity>()
+            .decodeSingleOrNull<PlanDbEntity>()
+
+        if (planDbEntityDto == null) {
+            return null
+        }
 
         val weeksDbEntitiesDto = dataSource
             .from("plans_weeks")
