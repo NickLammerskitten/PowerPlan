@@ -1,4 +1,4 @@
-package de.powerplan.plans.domain
+package de.powerplan.shareddomain
 
 import de.powerplan.shared.Index
 import java.util.UUID
@@ -15,7 +15,7 @@ data class SetEntry(
             index: String,
             repetitions: RepetitionScheme,
             goal: GoalScheme
-        ) = this.create(
+        ) = create(
             id = UUID.randomUUID(),
             index = index,
             repetitions = repetitions,

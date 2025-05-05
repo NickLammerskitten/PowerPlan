@@ -1,4 +1,4 @@
-package de.powerplan.plans.domain
+package de.powerplan.shareddomain
 
 import de.powerplan.shared.Index
 import java.util.UUID
@@ -16,7 +16,7 @@ data class TrainingDay(
             index: String,
             name: String?,
             exerciseEntries: List<ExerciseEntry>
-        ) = this.create(
+        ) = create(
             id = UUID.randomUUID(),
             index = index,
             name = name ?: "Training Day ${index + 1}",

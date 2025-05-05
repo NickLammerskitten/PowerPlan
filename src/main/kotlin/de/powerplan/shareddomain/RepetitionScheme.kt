@@ -1,4 +1,4 @@
-package de.powerplan.plans.domain
+package de.powerplan.shareddomain
 
 sealed class RepetitionScheme {
 

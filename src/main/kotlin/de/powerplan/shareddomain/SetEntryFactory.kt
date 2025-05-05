@@ -1,4 +1,4 @@
-package de.powerplan.plans.domain
+package de.powerplan.shareddomain
 
 object SetEntryFactory {
 
@@ -31,7 +31,7 @@ object SetEntryFactory {
     ): GoalScheme {
         return when (type) {
             GoalSchemeType.RPE -> GoalScheme.RPE(
-                rpe = rpe?: throw IllegalArgumentException("RPE")
+                rpe = rpe ?: throw IllegalArgumentException("RPE")
             )
 
             GoalSchemeType.RPE_RANGE -> GoalScheme.RPERange(

@@ -1,7 +1,10 @@
 package de.powerplan.plans.infrastructure.adapters.db.entity
 
-import de.powerplan.plans.domain.*
 import de.powerplan.shared.Index
+import de.powerplan.shareddomain.GoalSchemeType
+import de.powerplan.shareddomain.RepetitionSchemeType
+import de.powerplan.shareddomain.SetEntry
+import de.powerplan.shareddomain.SetEntryFactory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.UUID

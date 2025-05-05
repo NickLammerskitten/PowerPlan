@@ -1,8 +1,12 @@
 package de.powerplan.plans.infrastructure.adapters.rest.requests
 
-import de.powerplan.plans.application.commands.*
-import de.powerplan.plans.domain.GoalSchemeType
-import de.powerplan.plans.domain.RepetitionSchemeType
+import de.powerplan.plans.application.commands.CreatePlanCommand
+import de.powerplan.plans.application.commands.CreateTrainingWeekCommand
+import de.powerplan.plans.application.commands.CreateTrainingDayCommand
+import de.powerplan.plans.application.commands.CreateSetEntryCommand
+import de.powerplan.plans.application.commands.CreateExerciseEntryCommand
+import de.powerplan.shareddomain.GoalSchemeType
+import de.powerplan.shareddomain.RepetitionSchemeType
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import java.util.UUID

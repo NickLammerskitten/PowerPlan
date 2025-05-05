@@ -1,7 +1,7 @@
 package de.powerplan.plans.infrastructure.adapters.db.entity
 
-import de.powerplan.plans.domain.ExerciseEntry
-import de.powerplan.plans.domain.TrainingDay
+import de.powerplan.shareddomain.ExerciseEntry
+import de.powerplan.shareddomain.TrainingDay
 import de.powerplan.shared.Index
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

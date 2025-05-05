@@ -1,7 +1,7 @@
 package de.powerplan.plans.application.views
 
-import de.powerplan.plans.domain.ExerciseEntry
-import de.powerplan.plans.domain.SetEntry
+import de.powerplan.shareddomain.ExerciseEntry
+import de.powerplan.shareddomain.SetEntry
 
 class PlanListView(
     val id: String,

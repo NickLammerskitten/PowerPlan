@@ -1,6 +1,7 @@
 package de.powerplan.plans.domain
 
 import de.powerplan.shared.Index
+import de.powerplan.shareddomain.TrainingDay
 import java.util.UUID
 
 data class Week(

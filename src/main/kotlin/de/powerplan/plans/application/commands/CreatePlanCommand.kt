@@ -1,8 +1,15 @@
 package de.powerplan.plans.application.commands
 
-import de.powerplan.plans.domain.*
+import de.powerplan.plans.domain.Plan
+import de.powerplan.plans.domain.Week
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
+import de.powerplan.shareddomain.TrainingDay
+import de.powerplan.shareddomain.RepetitionSchemeType
+import de.powerplan.shareddomain.GoalSchemeType
+import de.powerplan.shareddomain.ExerciseEntry
+import de.powerplan.shareddomain.SetEntry
+import de.powerplan.shareddomain.SetEntryFactory
 import java.util.UUID
 
 class CreatePlanCommand(

@@ -1,4 +1,4 @@
-package de.powerplan.plans.domain
+package de.powerplan.shareddomain
 
 import org.junit.jupiter.api.Test
 
