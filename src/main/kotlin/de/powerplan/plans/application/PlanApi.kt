@@ -11,6 +11,7 @@ import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
+import de.powerplan.shareddomain.TrainingDay
 import io.ktor.server.plugins.NotFoundException
 import org.springframework.stereotype.Component
 import java.util.UUID
@@ -74,6 +75,10 @@ class PlanApi(
         return planToView(
             planRepository.upsert(plan)
         )
+    }
+
+    suspend fun findTrainingDayById(id: UUID): TrainingDay? {
+        return planRepository.findTrainingDayById(id)
     }
 
     private suspend fun planToView(plan: Plan): PlanView {

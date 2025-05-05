@@ -4,6 +4,7 @@ import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.plans.infrastructure.adapters.db.entity.*
+import de.powerplan.shareddomain.TrainingDay
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -148,30 +149,84 @@ class PlanRepositoryPostgres(private val dataSource: SupabaseClient) : PlanRepos
         }
     }
 
+    override suspend fun findTrainingDayById(id: UUID): TrainingDay? {
+        val trainingDayDbEntityDto = dataSource
+            .from("plans_training_days")
+            .select(Columns.ALL) {
+                filter {
+                    TrainingDayDbEntity::id eq id
+                }
+            }
+            .decodeSingleOrNull<TrainingDayDbEntity>()
+
+        if (trainingDayDbEntityDto == null) {
+            return null
+        }
+
+        val trainingDayIds = listOf(trainingDayDbEntityDto.id)
+        val exerciseEntriesDbEntitiesDto = dataSource
+            .from("plans_exercises")
+            .select(Columns.ALL) {
+                filter {
+                    ExerciseEntryDbEntity::plansTrainingDaysId isIn trainingDayIds
+                }
+            }
+            .decodeList<ExerciseEntryDbEntity>()
+
+        val exerciseEntryIds = exerciseEntriesDbEntitiesDto.map { it.id }
+        val setEntriesDbEntitiesDto = dataSource
+            .from("plans_sets")
+            .select(Columns.ALL) {
+                filter {
+                    SetEntryDbEntity::plansExercisesId isIn exerciseEntryIds
+                }
+            }
+            .decodeList<SetEntryDbEntity>()
+
+        return trainingDayBuilder(
+            trainingDayDbEntity = trainingDayDbEntityDto,
+            exerciseEntryDbEntites = exerciseEntriesDbEntitiesDto,
+            setEntryDbEntities = setEntriesDbEntitiesDto
+        )
+    }
+
     private fun planBuilder(
         planDbEntity: PlanDbEntity, weekDbEntities: List<WeekDbEntity>, trainingDayDbEntity: List<TrainingDayDbEntity>,
         exerciseEntryDbEntites: List<ExerciseEntryDbEntity>, setEntryDbEntities: List<SetEntryDbEntity>
     ): Plan {
-        val setsByExerciseId = setEntryDbEntities.groupBy { it.plansExercisesId }
-        val exerciseEntriesByTrainingDayId = exerciseEntryDbEntites.groupBy { it.plansTrainingDaysId }
         val trainingDaysByWeekId = trainingDayDbEntity.groupBy { it.plansWeeksId }
 
         val weeks = weekDbEntities.map { weekDbEntity ->
             val trainingDays = trainingDaysByWeekId[weekDbEntity.id]?.map { trainingDayDbEntity ->
-                val exerciseEntries = exerciseEntriesByTrainingDayId[trainingDayDbEntity.id]?.map { exerciseDbEntity ->
-                    val sets = setsByExerciseId[exerciseDbEntity.id]?.map { setDbEntity ->
-                        setDbEntity.toDomain()
-                    } ?: emptyList()
-
-                    exerciseDbEntity.toDomain(sets)
-                } ?: emptyList()
-
-                trainingDayDbEntity.toDomain(exerciseEntries)
+                trainingDayBuilder(
+                    trainingDayDbEntity = trainingDayDbEntity,
+                    exerciseEntryDbEntites = exerciseEntryDbEntites,
+                    setEntryDbEntities = setEntryDbEntities
+                )
             } ?: emptyList()
 
             weekDbEntity.toDomain(trainingDays)
         }
 
         return planDbEntity.toDomain(weeks)
+    }
+
+    private fun trainingDayBuilder(
+        trainingDayDbEntity: TrainingDayDbEntity,
+        exerciseEntryDbEntites: List<ExerciseEntryDbEntity>,
+        setEntryDbEntities: List<SetEntryDbEntity>
+    ): TrainingDay {
+        val setsByExerciseId = setEntryDbEntities.groupBy { it.plansExercisesId }
+        val exerciseEntriesByTrainingDayId = exerciseEntryDbEntites.groupBy { it.plansTrainingDaysId }
+
+        val exerciseEntries = exerciseEntriesByTrainingDayId[trainingDayDbEntity.id]?.map { exerciseDbEntity ->
+            val sets = setsByExerciseId[exerciseDbEntity.id]?.map { setDbEntity ->
+                setDbEntity.toDomain()
+            } ?: emptyList()
+
+            exerciseDbEntity.toDomain(sets)
+        } ?: emptyList()
+
+        return trainingDayDbEntity.toDomain(exerciseEntries)
     }
 }
