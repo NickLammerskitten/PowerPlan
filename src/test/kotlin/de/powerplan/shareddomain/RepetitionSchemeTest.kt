@@ -1,13 +1,11 @@
 package de.powerplan.shareddomain
 
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class RepetitionSchemeTest {
-
     @Test
     fun `Fixed Repetitionscheme contains only fixed reps`() {
         val fixed = RepetitionScheme.Fixed(5)
@@ -25,10 +23,11 @@ class RepetitionSchemeTest {
 
     @Test
     fun `Range Repetitionscheme contains min and max reps`() {
-        val range = RepetitionScheme.Range(
-            min = 5,
-            max = 10
-        )
+        val range =
+            RepetitionScheme.Range(
+                min = 5,
+                max = 10,
+            )
         assertNull(range.getFixedReps())
         assertEquals(5, range.getMinReps())
         assertEquals(10, range.getMaxReps())
@@ -39,7 +38,7 @@ class RepetitionSchemeTest {
         assertThrows<IllegalArgumentException> {
             RepetitionScheme.Range(
                 min = 10,
-                max = 5
+                max = 5,
             )
         }
     }

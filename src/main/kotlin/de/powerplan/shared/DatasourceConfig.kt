@@ -10,32 +10,31 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class DatasourceConfig(properties: PowerplanDataSourceProperties) {
+class DatasourceConfig(
+    properties: PowerplanDataSourceProperties,
+) {
+    private val supabase =
+        createSupabaseClient(
+            supabaseUrl = properties.url,
+            supabaseKey = properties.key,
+        ) {
+            install(Postgrest) {
+                defaultSchema = properties.schema
+                propertyConversionMethod = PropertyConversionMethod.CAMEL_CASE_TO_SNAKE_CASE
+            }
 
-    private val supabase = createSupabaseClient(
-        supabaseUrl = properties.url,
-        supabaseKey = properties.key,
-    ) {
-        install(Postgrest) {
-            defaultSchema = properties.schema
-            propertyConversionMethod = PropertyConversionMethod.CAMEL_CASE_TO_SNAKE_CASE
+            install(Auth) {
+                alwaysAutoRefresh = true
+                enableLifecycleCallbacks = false
+            }
         }
-
-        install(Auth) {
-            alwaysAutoRefresh = true
-            enableLifecycleCallbacks = false
-        }
-    }
 
     @Bean
-    fun dataSource(): SupabaseClient {
-        return supabase
-    }
+    fun dataSource(): SupabaseClient = supabase
 }
 
 @ConfigurationProperties(prefix = "spring.supabase")
 class PowerplanDataSourceProperties {
-
     lateinit var url: String
 
     lateinit var key: String

@@ -1,10 +1,9 @@
 package de.powerplan.exercises.application.dto
 
 import de.powerplan.exercises.domain.BodySection
-import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.exercises.domain.InvolvedMuscle
 import de.powerplan.shareddomain.Classification
-
+import de.powerplan.shareddomain.DifficultyLevel
 import java.util.UUID
 
 class ExerciseDto(
@@ -18,5 +17,5 @@ class ExerciseDto(
     val primaryEquipmentId: UUID,
     val secondaryEquipmentId: UUID? = null,
     val bodySection: BodySection,
-    val classification: Classification
+    val classification: Classification,
 )

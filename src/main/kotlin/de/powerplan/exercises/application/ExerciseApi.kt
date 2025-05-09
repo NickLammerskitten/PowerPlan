@@ -10,28 +10,27 @@ import java.util.UUID
 @Component
 class ExerciseApi(
     private val exercisesViewRepository: ExercisesViewRepository,
-    private val equipmentResolver: EquipmentResolver
+    private val equipmentResolver: EquipmentResolver,
 ) {
-
     suspend fun exercises(queryFilters: ExercisesQueryFilters): List<Exercise> {
         val exerciseDtos = exercisesViewRepository.findExercises(queryFilters)
 
-        val allEquipmentIds = exerciseDtos
-            .flatMap { listOfNotNull(it.primaryEquipmentId, it.secondaryEquipmentId) }
-            .distinct()
+        val allEquipmentIds =
+            exerciseDtos
+                .flatMap { listOfNotNull(it.primaryEquipmentId, it.secondaryEquipmentId) }
+                .distinct()
         val equipmentMap = equipmentResolver.findEquipmentsByIds(allEquipmentIds)
 
         return exerciseDtos.map { exerciseDto ->
             Exercise.create(
                 exerciseDto = exerciseDto,
-                equipmentList = equipmentMap
+                equipmentList = equipmentMap,
             )
         }
     }
 
-    suspend fun exerciseNamesByIds(ids: List<UUID>): List<Pair<UUID, String>> {
-        return exercisesViewRepository.findExerciseNamesByIds(ids)
-    }
+    suspend fun exerciseNamesByIds(ids: List<UUID>): List<Pair<UUID, String>> =
+        exercisesViewRepository.findExerciseNamesByIds(ids)
 
     suspend fun exercise(id: UUID): Exercise {
         val exerciseDto =
@@ -42,7 +41,7 @@ class ExerciseApi(
 
         return Exercise.create(
             exerciseDto = exerciseDto,
-            equipmentList = equipmentMap
+            equipmentList = equipmentMap,
         )
     }
 }

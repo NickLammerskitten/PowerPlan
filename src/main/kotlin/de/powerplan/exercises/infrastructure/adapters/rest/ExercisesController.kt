@@ -2,11 +2,11 @@ package de.powerplan.exercises.infrastructure.adapters.rest
 
 import de.powerplan.exercises.application.ExerciseApi
 import de.powerplan.exercises.application.views.query.ExercisesQueryFilters
-import de.powerplan.shareddomain.Classification
 import de.powerplan.exercises.domain.BodySection
-import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.exercises.domain.Exercise
 import de.powerplan.shared.Pageable
+import de.powerplan.shareddomain.Classification
+import de.powerplan.shareddomain.DifficultyLevel
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -19,21 +19,22 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/exercises")
-class ExercisesController(private val exerciseApi: ExerciseApi) {
-
+class ExercisesController(
+    private val exerciseApi: ExerciseApi,
+) {
     @RequestMapping(method = [RequestMethod.GET])
     @Operation(summary = "Get a list of exercises")
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "List of exercises"
+                description = "List of exercises",
             ),
             ApiResponse(
                 responseCode = "400",
                 description = "Invalid request parameters",
-            )
-        ]
+            ),
+        ],
     )
     suspend fun exercises(
         @RequestParam(value = "page", defaultValue = "0") page: Int,
@@ -41,21 +42,22 @@ class ExercisesController(private val exerciseApi: ExerciseApi) {
         @RequestParam(value = "fullTextSearch", required = false) fullTextSearch: String?,
         @RequestParam(value = "difficultyLevels", required = false) difficultyLevels: List<String>?,
         @RequestParam(value = "bodySections", required = false) bodySections: List<String>?,
-        @RequestParam(value = "classifications", required = false) classifications: List<String>?
-    ): List<Exercise> {
-        return exerciseApi.exercises(
-            queryFilters = ExercisesQueryFilters(
-                pageable = Pageable(
-                    page = page,
-                    size = size
+        @RequestParam(value = "classifications", required = false) classifications: List<String>?,
+    ): List<Exercise> =
+        exerciseApi.exercises(
+            queryFilters =
+                ExercisesQueryFilters(
+                    pageable =
+                        Pageable(
+                            page = page,
+                            size = size,
+                        ),
+                    fullTextSearch = fullTextSearch ?: "",
+                    difficultyLevels = difficultyLevels?.map { DifficultyLevel.valueOf(it) },
+                    bodySections = bodySections?.map { BodySection.valueOf(it) },
+                    classifications = classifications?.map { Classification.valueOf(it) },
                 ),
-                fullTextSearch = fullTextSearch ?: "",
-                difficultyLevels = difficultyLevels?.map { DifficultyLevel.valueOf(it) },
-                bodySections = bodySections?.map { BodySection.valueOf(it) },
-                classifications = classifications?.map { Classification.valueOf(it) },
-            )
         )
-    }
 
     @RequestMapping(method = [RequestMethod.GET], path = ["/{id}"])
     @Operation(summary = "Get an exercise by id")
@@ -63,16 +65,16 @@ class ExercisesController(private val exerciseApi: ExerciseApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Exercise"
+                description = "Exercise",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Exercise not found"
-            )
-        ]
+                description = "Exercise not found",
+            ),
+        ],
     )
     suspend fun exercise(
-        @PathVariable(value = "id") id: String
+        @PathVariable(value = "id") id: String,
     ): Exercise {
         val uuid = UUID.fromString(id)
         return exerciseApi.exercise(uuid)

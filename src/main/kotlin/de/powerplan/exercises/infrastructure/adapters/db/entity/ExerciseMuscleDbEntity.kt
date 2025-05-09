@@ -9,13 +9,11 @@ import kotlinx.serialization.Serializable
 class ExerciseMuscleDbEntity(
     val muscleGroup: MuscleGroup,
     val intensity: IntensityLevel,
-    val role: MuscleRole
+    val role: MuscleRole,
 ) {
-
-    fun toDomain(): InvolvedMuscle {
-        return InvolvedMuscle(
+    fun toDomain(): InvolvedMuscle =
+        InvolvedMuscle(
             muscleGroup = muscleGroup,
-            intensity = intensity
+            intensity = intensity,
         )
-    }
 }

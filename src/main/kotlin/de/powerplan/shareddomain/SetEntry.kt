@@ -7,31 +7,30 @@ data class SetEntry(
     val id: UUID,
     val index: Index,
     val repetitions: RepetitionScheme,
-    val goal: GoalScheme
+    val goal: GoalScheme,
 ) {
-
     companion object {
         fun initialize(
             index: String,
             repetitions: RepetitionScheme,
-            goal: GoalScheme
+            goal: GoalScheme,
         ) = create(
             id = UUID.randomUUID(),
             index = index,
             repetitions = repetitions,
-            goal = goal
+            goal = goal,
         )
 
         fun create(
             id: UUID,
             index: String,
             repetitions: RepetitionScheme,
-            goal: GoalScheme
+            goal: GoalScheme,
         ) = SetEntry(
             id = id,
             index = Index.of(index),
             repetitions = repetitions,
-            goal = goal
+            goal = goal,
         )
     }
 }

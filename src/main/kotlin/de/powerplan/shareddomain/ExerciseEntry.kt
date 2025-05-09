@@ -7,31 +7,30 @@ data class ExerciseEntry(
     val id: UUID,
     val index: Index,
     val exerciseId: UUID,
-    val sets: List<SetEntry>
+    val sets: List<SetEntry>,
 ) {
-
     companion object {
         fun initialize(
             index: String,
             exerciseId: UUID,
-            sets: List<SetEntry>
+            sets: List<SetEntry>,
         ) = create(
             id = UUID.randomUUID(),
             index = index,
             exerciseId = exerciseId,
-            sets = sets
+            sets = sets,
         )
 
         fun create(
             id: UUID,
             index: String,
             exerciseId: UUID,
-            sets: List<SetEntry>
+            sets: List<SetEntry>,
         ) = ExerciseEntry(
             id = id,
             index = Index.of(index),
             exerciseId = exerciseId,
-            sets = sets
+            sets = sets,
         )
     }
 }

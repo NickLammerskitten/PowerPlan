@@ -17,26 +17,26 @@ class Exercise(
     val primaryEquipment: Equipment,
     val secondaryEquipment: Equipment?,
     val bodySection: BodySection,
-    val classification: Classification
+    val classification: Classification,
 ) {
-
     companion object {
-
         fun create(
             exerciseDto: ExerciseDto,
-            equipmentList: List<Equipment>
+            equipmentList: List<Equipment>,
         ): Exercise {
-            val primaryEquipment = equipmentList.firstOrNull { equipment ->
-                equipment.id == exerciseDto.primaryEquipmentId
-            } ?: throw IllegalArgumentException("Primary equipment not found")
-
-            val secondaryEquipment = if (exerciseDto.secondaryEquipmentId != null) {
+            val primaryEquipment =
                 equipmentList.firstOrNull { equipment ->
-                    equipment.id == exerciseDto.secondaryEquipmentId
-                } ?: throw IllegalArgumentException("Secondary equipment not found")
-            } else {
-                null
-            }
+                    equipment.id == exerciseDto.primaryEquipmentId
+                } ?: throw IllegalArgumentException("Primary equipment not found")
+
+            val secondaryEquipment =
+                if (exerciseDto.secondaryEquipmentId != null) {
+                    equipmentList.firstOrNull { equipment ->
+                        equipment.id == exerciseDto.secondaryEquipmentId
+                    } ?: throw IllegalArgumentException("Secondary equipment not found")
+                } else {
+                    null
+                }
 
             return Exercise(
                 id = exerciseDto.id,
@@ -49,7 +49,7 @@ class Exercise(
                 primaryEquipment = primaryEquipment,
                 secondaryEquipment = secondaryEquipment,
                 bodySection = exerciseDto.bodySection,
-                classification = exerciseDto.classification
+                classification = exerciseDto.classification,
             )
         }
     }

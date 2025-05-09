@@ -21,20 +21,21 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/plans")
-class PlansController(private val planApi: PlanApi) {
-
+class PlansController(
+    private val planApi: PlanApi,
+) {
     @PostMapping
     @Operation(summary = "Create a new plan", description = "Create a new trainings plan")
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plan created successfully"
+                description = "Plan created successfully",
             ),
-        ]
+        ],
     )
     suspend fun createPlan(
-        @RequestBody request: CreatePlanRequest
+        @RequestBody request: CreatePlanRequest,
     ): PlanView {
         val command = request.toCommand()
         return planApi.createPlan(command)
@@ -46,28 +47,30 @@ class PlansController(private val planApi: PlanApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plans retrieved successfully"
+                description = "Plans retrieved successfully",
             ),
             ApiResponse(
                 responseCode = "400",
-                description = "Invalid request parameters"
-            )
-        ]
+                description = "Invalid request parameters",
+            ),
+        ],
     )
     suspend fun getPlans(
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "100") size: Int,
         @RequestParam(value = "fullTextSearch", required = false) fullTextSearch: String?,
-        @RequestParam(value = "onlyTemplates", defaultValue = "true", required = false) onlyTemplates: Boolean
+        @RequestParam(value = "onlyTemplates", defaultValue = "true", required = false) onlyTemplates: Boolean,
     ): List<PlanListView> {
-        val queryFilters = PlanQueryFilters(
-            pageable = Pageable(
-                page = page,
-                size = size
-            ),
-            fullTextSearch = fullTextSearch ?: "",
-            onlyTemplates = true
-        )
+        val queryFilters =
+            PlanQueryFilters(
+                pageable =
+                    Pageable(
+                        page = page,
+                        size = size,
+                    ),
+                fullTextSearch = fullTextSearch ?: "",
+                onlyTemplates = true,
+            )
         return planApi.plans(queryFilters)
     }
 
@@ -77,17 +80,17 @@ class PlansController(private val planApi: PlanApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plan retrieved successfully"
+                description = "Plan retrieved successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Plan not found"
-            )
-        ]
+                description = "Plan not found",
+            ),
+        ],
     )
-    suspend fun getPlanById(@PathVariable id: String): PlanView? {
-        return planApi.getPlan(UUID.fromString(id))
-    }
+    suspend fun getPlanById(
+        @PathVariable id: String,
+    ): PlanView? = planApi.getPlan(UUID.fromString(id))
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a plan", description = "Delete a trainings plan by its ID")
@@ -95,17 +98,17 @@ class PlansController(private val planApi: PlanApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plan deleted successfully"
+                description = "Plan deleted successfully",
             ),
             ApiResponse(
                 responseCode = "400",
-                description = "Plan cannot be deleted because it is not a template"
-            )
-        ]
+                description = "Plan cannot be deleted because it is not a template",
+            ),
+        ],
     )
-    suspend fun deletePlan(@PathVariable id: String) {
-        return planApi.deletePlan(UUID.fromString(id))
-    }
+    suspend fun deletePlan(
+        @PathVariable id: String,
+    ) = planApi.deletePlan(UUID.fromString(id))
 
     @PostMapping("/{id}/start")
     @Operation(summary = "Start a plan", description = "Start a trainings plan from a given template")
@@ -113,17 +116,17 @@ class PlansController(private val planApi: PlanApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plan started successfully"
+                description = "Plan started successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Plan not found"
-            )
-        ]
+                description = "Plan not found",
+            ),
+        ],
     )
-    suspend fun startPlan(@PathVariable id: String): PlanView {
-        return planApi.startNewPlan(UUID.fromString(id))
-    }
+    suspend fun startPlan(
+        @PathVariable id: String,
+    ): PlanView = planApi.startNewPlan(UUID.fromString(id))
 
     @PostMapping("/{id}/finish")
     @Operation(summary = "Finish a plan", description = "Finish a trainings plan")
@@ -131,15 +134,15 @@ class PlansController(private val planApi: PlanApi) {
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Plan finished successfully"
+                description = "Plan finished successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Plan not found"
-            )
-        ]
+                description = "Plan not found",
+            ),
+        ],
     )
-    suspend fun finishPlan(@PathVariable id: String): PlanView {
-        return planApi.finishPlan(UUID.fromString(id))
-    }
+    suspend fun finishPlan(
+        @PathVariable id: String,
+    ): PlanView = planApi.finishPlan(UUID.fromString(id))
 }

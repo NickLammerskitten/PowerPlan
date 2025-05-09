@@ -7,9 +7,7 @@ import java.util.UUID
 
 @Component
 class DefaultEquipmentResolver(
-    private val repository: EquipmentViewRepository
+    private val repository: EquipmentViewRepository,
 ) : EquipmentResolver {
-    override suspend fun findEquipmentsByIds(ids: List<UUID>): List<Equipment> {
-        return repository.getEquipmentsByIds(ids)
-    }
+    override suspend fun findEquipmentsByIds(ids: List<UUID>): List<Equipment> = repository.getEquipmentsByIds(ids)
 }

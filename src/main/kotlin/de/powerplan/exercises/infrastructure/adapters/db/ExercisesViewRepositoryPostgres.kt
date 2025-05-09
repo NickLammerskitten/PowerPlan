@@ -12,18 +12,21 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : ExercisesViewRepository {
+class ExercisesViewRepositoryPostgres(
+    private val dataSource: SupabaseClient,
+) : ExercisesViewRepository {
     override suspend fun findExercises(queryFilters: ExercisesQueryFilters): List<ExerciseDto> {
         val columns = exerciseColumns()
 
-        return dataSource.from("exercises")
+        return dataSource
+            .from("exercises")
             .select(columns = columns) {
                 range(queryFilters.pageable.range())
                 filter {
                     if (queryFilters.fullTextSearch.isNotBlank()) {
                         val fullTextSearch = queryFilters.fullTextSearch.trimIndent().lowercase()
                         or {
-                            ilike("name", "%${fullTextSearch}%")
+                            ilike("name", "%$fullTextSearch%")
                         }
                     }
 
@@ -51,44 +54,44 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
                         }
                     }
                 }
-            }
-            .decodeList<ExerciseDbEntity>()
+            }.decodeList<ExerciseDbEntity>()
             .map(ExerciseDbEntity::toDomain)
     }
 
     override suspend fun findExerciseNamesByIds(ids: List<UUID>): List<Pair<UUID, String>> {
-        val columns = Columns.raw(
-            """
-            id,
-            name
-        """.trimIndent()
-        )
+        val columns =
+            Columns.raw(
+                """
+                id,
+                name
+                """.trimIndent(),
+            )
 
-        return dataSource.from("exercises")
+        return dataSource
+            .from("exercises")
             .select(columns) {
                 filter {
                     ExerciseIdNamePairDbEntity::id isIn ids
                 }
-            }
-            .decodeList<ExerciseIdNamePairDbEntity>()
+            }.decodeList<ExerciseIdNamePairDbEntity>()
             .map(ExerciseIdNamePairDbEntity::toDomain)
     }
 
     override suspend fun findExerciseById(id: UUID): ExerciseDto? {
         val columns = exerciseColumns()
 
-        return dataSource.from("exercises")
+        return dataSource
+            .from("exercises")
             .select(columns = columns) {
                 filter {
                     ExerciseDbEntity::id eq id
                 }
-            }
-            .decodeSingleOrNull<ExerciseDbEntity>()
+            }.decodeSingleOrNull<ExerciseDbEntity>()
             ?.toDomain()
     }
 
-    private fun exerciseColumns(): Columns {
-        return Columns.raw(
+    private fun exerciseColumns(): Columns =
+        Columns.raw(
             """
             id,
             name,
@@ -104,7 +107,6 @@ class ExercisesViewRepositoryPostgres(private val dataSource: SupabaseClient) : 
                 intensity,
                 role
             ) 
-        """.trimIndent()
+            """.trimIndent(),
         )
-    }
 }

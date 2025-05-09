@@ -11,9 +11,8 @@ data class Plan(
     val classifications: List<Classification>,
     val weeks: List<Week>,
     val isTemplate: Boolean,
-    private var _planStatus: PlanStatus? = null
+    private var _planStatus: PlanStatus? = null,
 ) {
-
     val planStatus: PlanStatus?
         get() = _planStatus
 
@@ -32,30 +31,34 @@ data class Plan(
     }
 
     fun startNew(): Plan {
-        val newWeeks = weeks.map { week ->
-            val newWeekId = UUID.randomUUID()
-            val newTrainingDays = week.trainingDays.map { trainingDay ->
-                val newTrainingDayId = UUID.randomUUID()
-                val newExercises = trainingDay.exerciseEntries.map { exerciseEntry ->
-                    val newExerciseId = UUID.randomUUID()
-                    val newSets = exerciseEntry.sets.map { set ->
-                        set.copy(id = UUID.randomUUID())
+        val newWeeks =
+            weeks.map { week ->
+                val newWeekId = UUID.randomUUID()
+                val newTrainingDays =
+                    week.trainingDays.map { trainingDay ->
+                        val newTrainingDayId = UUID.randomUUID()
+                        val newExercises =
+                            trainingDay.exerciseEntries.map { exerciseEntry ->
+                                val newExerciseId = UUID.randomUUID()
+                                val newSets =
+                                    exerciseEntry.sets.map { set ->
+                                        set.copy(id = UUID.randomUUID())
+                                    }
+
+                                exerciseEntry.copy(id = newExerciseId, sets = newSets)
+                            }
+
+                        trainingDay.copy(id = newTrainingDayId, exerciseEntries = newExercises)
                     }
 
-                    exerciseEntry.copy(id = newExerciseId, sets = newSets)
-                }
-
-                trainingDay.copy(id = newTrainingDayId, exerciseEntries = newExercises)
+                week.copy(id = newWeekId, trainingDays = newTrainingDays)
             }
-
-            week.copy(id = newWeekId, trainingDays = newTrainingDays)
-        }
 
         return this.copy(
             id = UUID.randomUUID(),
             weeks = newWeeks,
             isTemplate = false,
-            _planStatus = PlanStatus.ACTIVE
+            _planStatus = PlanStatus.ACTIVE,
         )
     }
 
@@ -72,13 +75,13 @@ data class Plan(
             name: String,
             difficultyLevel: DifficultyLevel?,
             classifications: List<Classification>,
-            weeks: List<Week>
+            weeks: List<Week>,
         ) = this.create(
             id = UUID.randomUUID(),
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
-            weeks = weeks
+            weeks = weeks,
         )
 
         fun create(
@@ -88,7 +91,7 @@ data class Plan(
             classifications: List<Classification>,
             weeks: List<Week>,
             isTemplate: Boolean = true,
-            planStatus: PlanStatus? = null
+            planStatus: PlanStatus? = null,
         ) = Plan(
             id = id,
             name = name,
@@ -96,7 +99,7 @@ data class Plan(
             classifications = classifications,
             weeks = weeks,
             isTemplate = isTemplate,
-            _planStatus = planStatus
+            _planStatus = planStatus,
         )
     }
 }

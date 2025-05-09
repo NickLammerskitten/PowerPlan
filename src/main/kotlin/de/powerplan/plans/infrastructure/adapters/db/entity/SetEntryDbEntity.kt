@@ -33,31 +33,30 @@ class SetEntryDbEntity(
     @SerialName("percent_one_rep_max")
     val percentOfOneRM: Double?,
 ) {
-
-    fun toDomain(): SetEntry {
-        return SetEntry(
+    fun toDomain(): SetEntry =
+        SetEntry(
             id = UUID.fromString(this.id),
             index = Index.of(this.index),
-            repetitions = SetEntryFactory.createRepetitionScheme(
-                type = this.repetitionsScheme,
-                fixedReps = this.fixedReps,
-                minReps = this.minReps,
-                maxReps = this.maxReps,
-            ),
-            goal = SetEntryFactory.createGoalScheme(
-                type = this.goalScheme,
-                rpe = this.rpe,
-                minRpe = this.minRpe,
-                maxRpe = this.maxRpe,
-                percent1RM = this.percentOfOneRM
-            )
+            repetitions =
+                SetEntryFactory.createRepetitionScheme(
+                    type = this.repetitionsScheme,
+                    fixedReps = this.fixedReps,
+                    minReps = this.minReps,
+                    maxReps = this.maxReps,
+                ),
+            goal =
+                SetEntryFactory.createGoalScheme(
+                    type = this.goalScheme,
+                    rpe = this.rpe,
+                    minRpe = this.minRpe,
+                    maxRpe = this.maxRpe,
+                    percent1RM = this.percentOfOneRM,
+                ),
         )
-    }
-
 }
 
-fun SetEntry.toDbEntity(planExerciseId: UUID): SetEntryDbEntity {
-    return SetEntryDbEntity(
+fun SetEntry.toDbEntity(planExerciseId: UUID): SetEntryDbEntity =
+    SetEntryDbEntity(
         plansExercisesId = planExerciseId.toString(),
         id = this.id.toString(),
         index = this.index.value,
@@ -69,6 +68,5 @@ fun SetEntry.toDbEntity(planExerciseId: UUID): SetEntryDbEntity {
         rpe = this.goal.getRpe(),
         minRpe = this.goal.getMinRpe(),
         maxRpe = this.goal.getMaxRpe(),
-        percentOfOneRM = this.goal.getPercent1RM()
+        percentOfOneRM = this.goal.getPercent1RM(),
     )
-}

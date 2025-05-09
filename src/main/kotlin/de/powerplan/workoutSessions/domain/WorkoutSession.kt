@@ -1,8 +1,8 @@
 package de.powerplan.workoutSessions.domain
 
 import java.time.Duration
-import java.util.UUID
 import java.time.LocalDateTime
+import java.util.UUID
 
 class WorkoutSession private constructor(
     val id: UUID,
@@ -11,15 +11,12 @@ class WorkoutSession private constructor(
     // measured in seconds
     duration: Int? = null,
     val notes: String? = null,
-    val content: WorkoutSessionContent? = null
+    val content: WorkoutSessionContent? = null,
 ) {
-
     var duration = duration
         private set
 
-    fun isFinished(): Boolean {
-        return duration != null
-    }
+    fun isFinished(): Boolean = duration != null
 
     fun finish() {
         if (isFinished()) {
@@ -31,16 +28,12 @@ class WorkoutSession private constructor(
     }
 
     companion object {
-
-        fun initialize(
-            trainingDayId: UUID
-        ): WorkoutSession {
-            return create(
+        fun initialize(trainingDayId: UUID): WorkoutSession =
+            create(
                 id = UUID.randomUUID(),
                 trainingDayId = trainingDayId,
-                startTime = LocalDateTime.now()
+                startTime = LocalDateTime.now(),
             )
-        }
 
         fun create(
             id: UUID,
@@ -48,7 +41,7 @@ class WorkoutSession private constructor(
             startTime: LocalDateTime,
             duration: Int? = null,
             notes: String? = null,
-            content: WorkoutSessionContent? = null
+            content: WorkoutSessionContent? = null,
         ) = WorkoutSession(
             id = id,
             trainingDayId = trainingDayId,
@@ -58,5 +51,4 @@ class WorkoutSession private constructor(
             content = content,
         )
     }
-
 }

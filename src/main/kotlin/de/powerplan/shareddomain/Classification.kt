@@ -12,5 +12,5 @@ enum class Classification {
     PLYOMETRIC,
     BALLISTICS,
     OLYMPIC_WEIGHTLIFTING,
-    BALANCE
+    BALANCE,
 }

@@ -1,23 +1,23 @@
 package de.powerplan.exercises.domain
 
 enum class MuscleGroup {
-    /* BACK */
+    // BACK
     TRAPEZIUS,
     BACK,
 
-    /* CHEST */
+    // CHEST
     CHEST,
 
-    /* ARMS */
+    // ARMS
     BICEPS,
     TRICEPS,
     FOREARMS,
     SHOULDERS,
 
-    /* ABS */
+    // ABS
     ABS,
 
-    /* LEGS */
+    // LEGS
     ABDUCTORS,
     HAMSTRINGS,
     QUADRICEPS,

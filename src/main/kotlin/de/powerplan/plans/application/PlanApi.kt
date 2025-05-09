@@ -2,11 +2,11 @@ package de.powerplan.plans.application
 
 import de.powerplan.exercises.application.DefaultExerciseViewResolver
 import de.powerplan.plans.application.commands.CreatePlanCommand
-import de.powerplan.plans.application.views.PlanView
-import de.powerplan.plans.application.views.WeekView
-import de.powerplan.plans.application.views.TrainingDayView
 import de.powerplan.plans.application.views.ExerciseEntryView
 import de.powerplan.plans.application.views.PlanListView
+import de.powerplan.plans.application.views.PlanView
+import de.powerplan.plans.application.views.TrainingDayView
+import de.powerplan.plans.application.views.WeekView
 import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
@@ -19,14 +19,12 @@ import java.util.UUID
 @Component
 class PlanApi(
     private val exerciseViewResolver: DefaultExerciseViewResolver,
-    private val planRepository: PlanRepository
+    private val planRepository: PlanRepository,
 ) {
-
-    suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
-        return planToView(
-            planRepository.upsert(createPlanCommand.toDomain())
+    suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView =
+        planToView(
+            planRepository.upsert(createPlanCommand.toDomain()),
         )
-    }
 
     suspend fun plans(queryFilters: PlanQueryFilters): List<PlanListView> {
         val planDbEntities = planRepository.findPlans(queryFilters)
@@ -37,7 +35,7 @@ class PlanApi(
                 difficultyLevel = planDbEntity.difficultyLevel?.name,
                 classifications = planDbEntity.classifications.map(Classification::name),
                 isTemplate = planDbEntity.isTemplate,
-                status = planDbEntity.status?.name
+                status = planDbEntity.status?.name,
             )
         }
     }
@@ -63,7 +61,7 @@ class PlanApi(
         val newPlan = plan.startNew()
 
         return planToView(
-            planRepository.upsert(newPlan)
+            planRepository.upsert(newPlan),
         )
     }
 
@@ -73,18 +71,17 @@ class PlanApi(
         plan.finish()
 
         return planToView(
-            planRepository.upsert(plan)
+            planRepository.upsert(plan),
         )
     }
 
-    suspend fun findTrainingDayById(id: UUID): TrainingDay? {
-        return planRepository.findTrainingDayById(id)
-    }
+    suspend fun findTrainingDayById(id: UUID): TrainingDay? = planRepository.findTrainingDayById(id)
 
     private suspend fun planToView(plan: Plan): PlanView {
-        val exerciseIds = plan.weeks.flatMap { week ->
-            week.trainingDays.flatMap { it.exerciseEntries }.map { it.exerciseId }
-        }
+        val exerciseIds =
+            plan.weeks.flatMap { week ->
+                week.trainingDays.flatMap { it.exerciseEntries }.map { it.exerciseId }
+            }
 
         val exercises = exerciseViewResolver.findExerciseNamesByIds(exerciseIds)
         val exerciseMap = exercises.associate { it.first to it.second }
@@ -94,26 +91,30 @@ class PlanApi(
             name = plan.name,
             difficultyLevel = plan.difficultyLevel?.name,
             classifications = plan.classifications.map(Classification::name),
-            weeks = plan.weeks.map { week ->
-                WeekView(
-                    index = week.index.value,
-                    trainingDays = week.trainingDays.map { trainingDay ->
-                        TrainingDayView(
-                            index = trainingDay.index.value,
-                            name = trainingDay.name,
-                            exerciseEntries = trainingDay.exerciseEntries.map { exerciseEntry ->
-                                ExerciseEntryView(
-                                    exerciseEntry = exerciseEntry,
-                                    exerciseName = exerciseMap[exerciseEntry.exerciseId]
-                                        ?: throw NullPointerException("Exercise ${exerciseEntry.exerciseId} not found")
+            weeks =
+                plan.weeks.map { week ->
+                    WeekView(
+                        index = week.index.value,
+                        trainingDays =
+                            week.trainingDays.map { trainingDay ->
+                                TrainingDayView(
+                                    index = trainingDay.index.value,
+                                    name = trainingDay.name,
+                                    exerciseEntries =
+                                        trainingDay.exerciseEntries.map { exerciseEntry ->
+                                            ExerciseEntryView(
+                                                exerciseEntry = exerciseEntry,
+                                                exerciseName =
+                                                    exerciseMap[exerciseEntry.exerciseId]
+                                                        ?: throw NullPointerException("Exercise ${exerciseEntry.exerciseId} not found"),
+                                            )
+                                        },
                                 )
-                            }
-                        )
-                    }
-                )
-            },
+                            },
+                    )
+                },
             isTemplate = plan.isTemplate,
-            status = plan.planStatus?.name
+            status = plan.planStatus?.name,
         )
     }
 }

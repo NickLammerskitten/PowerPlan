@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-class EquipmentViewRepositoryPostgres(private val dataSource: SupabaseClient) : EquipmentViewRepository {
-    override suspend fun getEquipmentsByIds(ids: List<UUID>): List<Equipment> {
-
-        return dataSource.from("equipments")
+class EquipmentViewRepositoryPostgres(
+    private val dataSource: SupabaseClient,
+) : EquipmentViewRepository {
+    override suspend fun getEquipmentsByIds(ids: List<UUID>): List<Equipment> =
+        dataSource
+            .from("equipments")
             .select()
             .decodeList<EquipmentDbEntity>()
             .map { it.toDomain() }
-    }
 }

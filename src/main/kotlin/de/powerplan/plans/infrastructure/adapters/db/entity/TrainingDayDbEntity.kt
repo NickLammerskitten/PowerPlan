@@ -1,8 +1,8 @@
 package de.powerplan.plans.infrastructure.adapters.db.entity
 
+import de.powerplan.shared.Index
 import de.powerplan.shareddomain.ExerciseEntry
 import de.powerplan.shareddomain.TrainingDay
-import de.powerplan.shared.Index
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.UUID
@@ -14,23 +14,20 @@ class TrainingDayDbEntity(
     val id: String,
     val index: String,
     val name: String,
-){
-
-    fun toDomain(exerciseEntries: List<ExerciseEntry>): TrainingDay {
-        return TrainingDay(
+) {
+    fun toDomain(exerciseEntries: List<ExerciseEntry>): TrainingDay =
+        TrainingDay(
             id = UUID.fromString(id),
             index = Index.of(index),
             name = this.name,
             exerciseEntries = exerciseEntries,
         )
-    }
 }
 
-fun TrainingDay.toDbEntity(weekId: UUID): TrainingDayDbEntity {
-    return TrainingDayDbEntity(
+fun TrainingDay.toDbEntity(weekId: UUID): TrainingDayDbEntity =
+    TrainingDayDbEntity(
         plansWeeksId = weekId.toString(),
         id = this.id.toString(),
         index = this.index.value,
-        name = this.name
+        name = this.name,
     )
-}

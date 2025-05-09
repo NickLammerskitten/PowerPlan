@@ -6,14 +6,11 @@ import java.util.UUID
 @Serializable
 class ExerciseIdNamePairDbEntity(
     val id: String,
-    val name: String
+    val name: String,
 ) {
-
-    fun toDomain(): Pair<UUID, String> {
-        return Pair(
+    fun toDomain(): Pair<UUID, String> =
+        Pair(
             first = UUID.fromString(id),
-            second = name
+            second = name,
         )
-    }
-
 }

@@ -18,30 +18,26 @@ class PlanDbEntity(
     val classifications: List<Classification>,
     @SerialName("is_template")
     val isTemplate: Boolean,
-    val status: PlanStatus?
+    val status: PlanStatus?,
 ) {
-
-    fun toDomain(weeks: List<Week>): Plan {
-        return Plan.create(
+    fun toDomain(weeks: List<Week>): Plan =
+        Plan.create(
             id = UUID.fromString(id),
             name = name,
             difficultyLevel = difficultyLevel,
             classifications = classifications,
             weeks = weeks,
             isTemplate = isTemplate,
-            planStatus = status
+            planStatus = status,
         )
-    }
-
 }
 
-fun Plan.toDbEntity(): PlanDbEntity {
-    return PlanDbEntity(
+fun Plan.toDbEntity(): PlanDbEntity =
+    PlanDbEntity(
         id = this.id.toString(),
         name = this.name,
         difficultyLevel = this.difficultyLevel,
         classifications = this.classifications,
         isTemplate = this.isTemplate,
-        status = this.planStatus
+        status = this.planStatus,
     )
-}

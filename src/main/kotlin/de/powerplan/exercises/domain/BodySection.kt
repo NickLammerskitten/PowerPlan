@@ -5,5 +5,5 @@ enum class BodySection {
     MIDSECTION,
     LOWER_BODY,
     FULL_BODY,
-    UNSORTED
+    UNSORTED,
 }

@@ -1,7 +1,7 @@
 package de.powerplan.plans.infrastructure.adapters.db.entity
 
-import de.powerplan.shareddomain.TrainingDay
 import de.powerplan.plans.domain.Week
+import de.powerplan.shareddomain.TrainingDay
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.UUID
@@ -11,23 +11,19 @@ class WeekDbEntity(
     @SerialName("plan_id")
     val planId: String,
     val id: String,
-    val index: String
+    val index: String,
 ) {
-
-    fun toDomain(trainingDays: List<TrainingDay>): Week {
-        return Week.create(
+    fun toDomain(trainingDays: List<TrainingDay>): Week =
+        Week.create(
             id = UUID.fromString(id),
             index = index,
-            trainingDays = trainingDays
+            trainingDays = trainingDays,
         )
-    }
-
 }
 
-fun Week.toDbEntity(planId: UUID): WeekDbEntity {
-    return WeekDbEntity(
+fun Week.toDbEntity(planId: UUID): WeekDbEntity =
+    WeekDbEntity(
         planId = planId.toString(),
         id = this.id.toString(),
-        index = this.index.value
+        index = this.index.value,
     )
-}

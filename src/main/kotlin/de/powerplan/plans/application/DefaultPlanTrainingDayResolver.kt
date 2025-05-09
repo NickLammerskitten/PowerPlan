@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component
 import java.util.UUID
 
 @Component
-class DefaultPlanTrainingDayResolver(private val planApi: PlanApi) : PlanTrainingDayResolver {
-    override suspend fun findTrainingDayById(trainingDayId: UUID): TrainingDay? {
-        return planApi.findTrainingDayById(trainingDayId)
-    }
+class DefaultPlanTrainingDayResolver(
+    private val planApi: PlanApi,
+) : PlanTrainingDayResolver {
+    override suspend fun findTrainingDayById(trainingDayId: UUID): TrainingDay? =
+        planApi.findTrainingDayById(trainingDayId)
 }

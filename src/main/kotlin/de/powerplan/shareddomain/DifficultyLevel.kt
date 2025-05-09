@@ -4,5 +4,5 @@ enum class DifficultyLevel {
     BEGINNER,
     INTERMEDIATE,
     ADVANCED,
-    EXPERT
+    EXPERT,
 }

@@ -8,5 +8,5 @@ data class WorkoutSet(
     val exerciseId: UUID,
     val weight: Double?,
     val reps: Int?,
-    val durationSeconds: Int? = null
+    val durationSeconds: Int? = null,
 )

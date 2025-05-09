@@ -11,45 +11,44 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-class WorkoutSessionRepositorySupabase(private val dataSource: SupabaseClient) : WorkoutSessionRepository {
-    override suspend fun findWorkoutSessionByTrainingDayId(trainingDayId: UUID): WorkoutSession? {
-
-        return dataSource.from("workout_sessions")
+class WorkoutSessionRepositorySupabase(
+    private val dataSource: SupabaseClient,
+) : WorkoutSessionRepository {
+    override suspend fun findWorkoutSessionByTrainingDayId(trainingDayId: UUID): WorkoutSession? =
+        dataSource
+            .from("workout_sessions")
             .select(Columns.ALL) {
                 filter {
                     WorkoutSessionDbEntity::planTrainingDayId eq trainingDayId
                 }
-            }
-            .decodeSingleOrNull<WorkoutSessionDbEntity>()
+            }.decodeSingleOrNull<WorkoutSessionDbEntity>()
             ?.toDomain(content = null)
-    }
 
     override suspend fun upsert(session: WorkoutSession) {
         val sessionDbEntity = WorkoutSessionDbEntity.fromDomain(session)
 
-        dataSource.from("workout_sessions")
+        dataSource
+            .from("workout_sessions")
             .upsert(sessionDbEntity)
     }
 
-    override suspend fun find(id: UUID): WorkoutSession? {
-        return dataSource.from("workout_sessions")
+    override suspend fun find(id: UUID): WorkoutSession? =
+        dataSource
+            .from("workout_sessions")
             .select(Columns.ALL) {
                 filter {
                     WorkoutSessionDbEntity::id eq id
                 }
-            }
-            .decodeSingleOrNull<WorkoutSessionDbEntity>()
+            }.decodeSingleOrNull<WorkoutSessionDbEntity>()
             ?.toDomain(content = null)
-    }
 
-    override suspend fun findCurrentActiveSession(): WorkoutSession? {
-        return dataSource.from("workout_sessions")
+    override suspend fun findCurrentActiveSession(): WorkoutSession? =
+        dataSource
+            .from("workout_sessions")
             .select(Columns.ALL) {
                 filter {
                     WorkoutSessionDbEntity::duration isExact null
                 }
-            }
-            .decodeSingleOrNull<WorkoutSessionDbEntity>()
+            }.decodeSingleOrNull<WorkoutSessionDbEntity>()
             ?.toDomain(content = null)
-    }
 }

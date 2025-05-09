@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GoalSchemeTest {
-
     @Test
     fun `RPE GoalScheme contains only RPE`() {
         val rpe = GoalScheme.RPE(7.5)

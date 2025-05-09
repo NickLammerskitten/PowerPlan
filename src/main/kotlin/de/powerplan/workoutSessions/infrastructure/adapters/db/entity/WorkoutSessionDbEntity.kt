@@ -9,16 +9,15 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Serializable
-class WorkoutSessionDbEntity (
+class WorkoutSessionDbEntity(
     val id: String,
     @SerialName("plan_training_day_id")
     val planTrainingDayId: String,
     @SerialName("start_time")
     val startTime: String,
     val duration: Int? = null,
-    val notes: String? = null
+    val notes: String? = null,
 ) {
-
     companion object {
         fun fromDomain(workoutSession: WorkoutSession): WorkoutSessionDbEntity {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -29,19 +28,18 @@ class WorkoutSessionDbEntity (
                 planTrainingDayId = workoutSession.trainingDayId.toString(),
                 startTime = formattedStartTime,
                 duration = workoutSession.duration,
-                notes = workoutSession.notes
+                notes = workoutSession.notes,
             )
         }
     }
 }
 
-fun WorkoutSessionDbEntity.toDomain(content: WorkoutSessionContent?): WorkoutSession {
-    return WorkoutSession.create(
+fun WorkoutSessionDbEntity.toDomain(content: WorkoutSessionContent?): WorkoutSession =
+    WorkoutSession.create(
         id = UUID.fromString(this.id),
         trainingDayId = UUID.fromString(planTrainingDayId),
         startTime = LocalDateTime.parse(this.startTime),
         duration = duration,
         notes = notes,
-        content = content
+        content = content,
     )
-}

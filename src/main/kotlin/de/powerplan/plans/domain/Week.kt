@@ -7,27 +7,26 @@ import java.util.UUID
 data class Week(
     val id: UUID,
     val index: Index,
-    val trainingDays: List<TrainingDay>
+    val trainingDays: List<TrainingDay>,
 ) {
-
     companion object {
         fun initialize(
             index: String,
-            trainingDays: List<TrainingDay>
+            trainingDays: List<TrainingDay>,
         ) = Week(
             id = UUID.randomUUID(),
             index = Index.of(index),
-            trainingDays = trainingDays
+            trainingDays = trainingDays,
         )
 
         fun create(
             id: UUID,
             index: String,
-            trainingDays: List<TrainingDay>
+            trainingDays: List<TrainingDay>,
         ) = Week(
             id = id,
             index = Index.of(index),
-            trainingDays = trainingDays
+            trainingDays = trainingDays,
         )
     }
 }

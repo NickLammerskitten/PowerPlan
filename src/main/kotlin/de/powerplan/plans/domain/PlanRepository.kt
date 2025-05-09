@@ -6,11 +6,13 @@ import de.powerplan.shareddomain.TrainingDay
 import java.util.UUID
 
 interface PlanRepository {
-
     suspend fun upsert(plan: Plan): Plan
-    suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity>
-    suspend fun findById(id: UUID): Plan?
-    suspend fun delete(id: UUID)
-    suspend fun findTrainingDayById(id: UUID): TrainingDay?
 
+    suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity>
+
+    suspend fun findById(id: UUID): Plan?
+
+    suspend fun delete(id: UUID)
+
+    suspend fun findTrainingDayById(id: UUID): TrainingDay?
 }

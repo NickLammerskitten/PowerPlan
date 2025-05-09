@@ -10,7 +10,6 @@ import java.util.UUID
 import kotlin.test.assertFalse
 
 class PlanTest {
-
     @Test
     fun `Can create a plan`() {
         val plan = createMinimalPlan()
@@ -31,12 +30,13 @@ class PlanTest {
                 name = "",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = listOf(
-                    Week.initialize(
-                        index = "-1",
-                        trainingDays = emptyList()
-                    )
-                )
+                weeks =
+                    listOf(
+                        Week.initialize(
+                            index = "-1",
+                            trainingDays = emptyList(),
+                        ),
+                    ),
             )
         }
     }
@@ -49,12 +49,13 @@ class PlanTest {
                 name = "Test Plan",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = List(19) {
-                    Week.initialize(
-                        index = it.toString(),
-                        trainingDays = emptyList()
-                    )
-                }
+                weeks =
+                    List(19) {
+                        Week.initialize(
+                            index = it.toString(),
+                            trainingDays = emptyList(),
+                        )
+                    },
             )
         }
     }
@@ -67,7 +68,7 @@ class PlanTest {
                 name = "Test Plan",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = emptyList()
+                weeks = emptyList(),
             )
         }
     }
@@ -80,14 +81,15 @@ class PlanTest {
                 name = "Test Plan",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = listOf(
-                    Week.initialize(
-                        index = "-1",
-                        trainingDays = emptyList()
-                    )
-                ),
+                weeks =
+                    listOf(
+                        Week.initialize(
+                            index = "-1",
+                            trainingDays = emptyList(),
+                        ),
+                    ),
                 isTemplate = true,
-                planStatus = PlanStatus.ACTIVE
+                planStatus = PlanStatus.ACTIVE,
             )
         }
     }
@@ -100,14 +102,15 @@ class PlanTest {
                 name = "Test Plan",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = listOf(
-                    Week.initialize(
-                        index = "-1",
-                        trainingDays = emptyList()
-                    )
-                ),
+                weeks =
+                    listOf(
+                        Week.initialize(
+                            index = "-1",
+                            trainingDays = emptyList(),
+                        ),
+                    ),
                 isTemplate = false,
-                planStatus = null
+                planStatus = null,
             )
         }
     }
@@ -137,21 +140,21 @@ class PlanTest {
     }
 
     companion object {
-        fun createMinimalPlan(): Plan {
-            return Plan.create(
+        fun createMinimalPlan(): Plan =
+            Plan.create(
                 id = UUID.randomUUID(),
                 name = "Test Plan",
                 difficultyLevel = DifficultyLevel.BEGINNER,
                 classifications = emptyList(),
-                weeks = listOf(
-                    Week.initialize(
-                        index = "-1",
-                        trainingDays = emptyList()
-                    )
-                ),
+                weeks =
+                    listOf(
+                        Week.initialize(
+                            index = "-1",
+                            trainingDays = emptyList(),
+                        ),
+                    ),
                 isTemplate = true,
-                planStatus = null
+                planStatus = null,
             )
-        }
     }
 }

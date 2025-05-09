@@ -10,15 +10,13 @@ import java.util.UUID
 @Service
 class WorkoutSessionApi(
     private val planTrainingDayResolver: PlanTrainingDayResolver,
-    private val workoutSessionRepository: WorkoutSessionRepository
+    private val workoutSessionRepository: WorkoutSessionRepository,
 ) {
-
-    suspend fun findCurrentActiveSession(): WorkoutSession? {
-        return workoutSessionRepository.findCurrentActiveSession()
-    }
+    suspend fun findCurrentActiveSession(): WorkoutSession? = workoutSessionRepository.findCurrentActiveSession()
 
     suspend fun startNewWorkoutSession(trainingDayId: UUID): UUID {
-        planTrainingDayResolver.findTrainingDayById(trainingDayId) ?: throw NotFoundException("Training day $trainingDayId not found")
+        planTrainingDayResolver.findTrainingDayById(trainingDayId)
+            ?: throw NotFoundException("Training day $trainingDayId not found")
 
         val workoutSession = workoutSessionRepository.findWorkoutSessionByTrainingDayId(trainingDayId)
         if (workoutSession != null) {
@@ -30,9 +28,10 @@ class WorkoutSessionApi(
             throw IllegalStateException("An active workout session already exists. The id is ${activeWorkoutSession.id}.")
         }
 
-        val newWorkoutSession = WorkoutSession.initialize(
-            trainingDayId = trainingDayId,
-        )
+        val newWorkoutSession =
+            WorkoutSession.initialize(
+                trainingDayId = trainingDayId,
+            )
 
         workoutSessionRepository.upsert(newWorkoutSession)
 
@@ -40,8 +39,9 @@ class WorkoutSessionApi(
     }
 
     suspend fun finishWorkoutSession() {
-        val workoutSession = workoutSessionRepository.findCurrentActiveSession()
-            ?: throw IllegalArgumentException("No active workout session exists.")
+        val workoutSession =
+            workoutSessionRepository.findCurrentActiveSession()
+                ?: throw IllegalArgumentException("No active workout session exists.")
 
         if (workoutSession.isFinished()) {
             throw IllegalStateException("Workout session already finished.")
