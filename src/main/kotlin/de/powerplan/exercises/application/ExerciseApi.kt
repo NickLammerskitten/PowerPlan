@@ -3,6 +3,7 @@ package de.powerplan.exercises.application
 import de.powerplan.exercises.application.views.query.ExercisesQueryFilters
 import de.powerplan.exercises.domain.Exercise
 import de.powerplan.shared.EquipmentResolver
+import io.ktor.server.plugins.NotFoundException
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -32,8 +33,9 @@ class ExerciseApi(
         return exercisesViewRepository.findExerciseNamesByIds(ids)
     }
 
-    suspend fun exercise(id: UUID): Exercise? {
-        val exerciseDto = exercisesViewRepository.findExerciseById(id) ?: return null
+    suspend fun exercise(id: UUID): Exercise {
+        val exerciseDto =
+            exercisesViewRepository.findExerciseById(id) ?: throw NotFoundException("Exercise with id $id not found")
 
         val allEquipmentIds = listOfNotNull(exerciseDto.primaryEquipmentId, exerciseDto.secondaryEquipmentId)
         val equipmentMap = equipmentResolver.findEquipmentsByIds(allEquipmentIds)

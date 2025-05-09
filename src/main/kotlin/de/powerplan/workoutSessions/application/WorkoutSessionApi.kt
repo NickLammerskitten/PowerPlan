@@ -3,6 +3,7 @@ package de.powerplan.workoutSessions.application
 import de.powerplan.shared.PlanTrainingDayResolver
 import de.powerplan.workoutSessions.domain.WorkoutSession
 import de.powerplan.workoutSessions.domain.WorkoutSessionRepository
+import io.ktor.server.plugins.NotFoundException
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -16,17 +17,17 @@ class WorkoutSessionApi(
         return workoutSessionRepository.findCurrentActiveSession()
     }
 
-    suspend fun startNewWorkoutSession(trainingDayId: UUID): String {
-        planTrainingDayResolver.findTrainingDayById(trainingDayId) ?: return "Training day not found."
+    suspend fun startNewWorkoutSession(trainingDayId: UUID): UUID {
+        planTrainingDayResolver.findTrainingDayById(trainingDayId) ?: throw NotFoundException("Training day $trainingDayId not found")
 
         val workoutSession = workoutSessionRepository.findWorkoutSessionByTrainingDayId(trainingDayId)
         if (workoutSession != null) {
-            return "Workout session already exists for this training day."
+            throw IllegalStateException("Workout session for training day $trainingDayId already exists.")
         }
 
         val activeWorkoutSession = workoutSessionRepository.findCurrentActiveSession()
         if (activeWorkoutSession != null) {
-            return "There is already an active workout session."
+            throw IllegalStateException("An active workout session already exists. The id is ${activeWorkoutSession.id}.")
         }
 
         val newWorkoutSession = WorkoutSession.initialize(
@@ -35,7 +36,7 @@ class WorkoutSessionApi(
 
         workoutSessionRepository.upsert(newWorkoutSession)
 
-        return newWorkoutSession.id.toString()
+        return newWorkoutSession.id
     }
 
     suspend fun finishWorkoutSession() {

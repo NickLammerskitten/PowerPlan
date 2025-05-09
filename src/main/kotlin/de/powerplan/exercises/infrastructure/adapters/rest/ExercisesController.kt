@@ -10,14 +10,11 @@ import de.powerplan.shared.Pageable
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import io.swagger.v3.oas.annotations.media.Content
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @RestController
@@ -28,7 +25,14 @@ class ExercisesController(private val exerciseApi: ExerciseApi) {
     @Operation(summary = "Get a list of exercises")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "List of exercises"),
+            ApiResponse(
+                responseCode = "200",
+                description = "List of exercises"
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid request parameters",
+            )
         ]
     )
     suspend fun exercises(
@@ -57,16 +61,20 @@ class ExercisesController(private val exerciseApi: ExerciseApi) {
     @Operation(summary = "Get an exercise by id")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Exercise"),
-            ApiResponse(responseCode = "404", description = "Exercise not found", content = [Content()]),
+            ApiResponse(
+                responseCode = "200",
+                description = "Exercise"
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Exercise not found"
+            )
         ]
     )
     suspend fun exercise(
         @PathVariable(value = "id") id: String
     ): Exercise {
         val uuid = UUID.fromString(id)
-
         return exerciseApi.exercise(uuid)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found")
     }
 }

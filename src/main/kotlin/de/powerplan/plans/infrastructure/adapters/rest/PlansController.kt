@@ -47,6 +47,10 @@ class PlansController(private val planApi: PlanApi) {
             ApiResponse(
                 responseCode = "200",
                 description = "Plans retrieved successfully"
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid request parameters"
             )
         ]
     )
@@ -94,7 +98,7 @@ class PlansController(private val planApi: PlanApi) {
                 description = "Plan deleted successfully"
             ),
             ApiResponse(
-                responseCode = "409",
+                responseCode = "400",
                 description = "Plan cannot be deleted because it is not a template"
             )
         ]

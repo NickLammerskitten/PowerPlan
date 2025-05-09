@@ -3,6 +3,8 @@ package de.powerplan.workoutSessions.infrastructure.adapters.rest
 import de.powerplan.workoutSessions.application.WorkoutSessionApi
 import de.powerplan.workoutSessions.domain.WorkoutSession
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,12 +21,28 @@ class WorkoutSessionController(private val workoutSessionApi: WorkoutSessionApi)
         summary = "Starts a new workout session",
         description = "Starts a workout session for the given training day."
     )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Workout session started successfully"
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Training day not found"
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "An active workout session already exists. Only one workout session can be active at a time."
+            ),
+        ]
+    )
     suspend fun startNewWorkoutSession(
         @RequestParam(
             value = "trainingDayId",
             required = true
         ) trainingDayId: String
-    ): String {
+    ): UUID {
         return workoutSessionApi.startNewWorkoutSession(UUID.fromString(trainingDayId))
     }
 

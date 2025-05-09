@@ -4,11 +4,16 @@ class Pageable(
     val page: Int,
     val size: Int,
 ) {
-    fun offset(): Long {
+
+    init {
+        require(page >= 0) { "Page number must be non-negative" }
+    }
+
+    private fun offset(): Long {
         return (page * size).toLong()
     }
 
-    fun limit(): Long {
+    private fun limit(): Long {
         return size.toLong() - 1
     }
 

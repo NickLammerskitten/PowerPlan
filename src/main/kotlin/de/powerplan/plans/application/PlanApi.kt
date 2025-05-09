@@ -42,8 +42,8 @@ class PlanApi(
         }
     }
 
-    suspend fun getPlan(id: UUID): PlanView? {
-        val plan = planRepository.findById(id) ?: return null
+    suspend fun getPlan(id: UUID): PlanView {
+        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         return planToView(plan)
     }
 
