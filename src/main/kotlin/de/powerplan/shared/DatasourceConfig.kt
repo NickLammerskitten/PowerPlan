@@ -24,8 +24,8 @@ class DatasourceConfig(
             }
 
             install(Auth) {
-                alwaysAutoRefresh = true
-                enableLifecycleCallbacks = false
+                autoLoadFromStorage = false
+                alwaysAutoRefresh = false
             }
         }
 
