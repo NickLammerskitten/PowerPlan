@@ -5,6 +5,7 @@ import de.powerplan.exercises.application.views.query.ExercisesQueryFilters
 import de.powerplan.exercises.domain.BodySection
 import de.powerplan.exercises.domain.Exercise
 import de.powerplan.shared.Pageable
+import de.powerplan.shared.auth.HasRoleAuthenticated
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import io.swagger.v3.oas.annotations.Operation
@@ -19,6 +20,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/exercises")
+@HasRoleAuthenticated
 class ExercisesController(
     private val exerciseApi: ExerciseApi,
 ) {

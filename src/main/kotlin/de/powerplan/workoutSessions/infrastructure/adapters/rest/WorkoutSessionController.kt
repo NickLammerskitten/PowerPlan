@@ -1,5 +1,6 @@
 package de.powerplan.workoutSessions.infrastructure.adapters.rest
 
+import de.powerplan.shared.auth.HasRoleAuthenticated
 import de.powerplan.workoutSessions.application.WorkoutSessionApi
 import de.powerplan.workoutSessions.domain.WorkoutSession
 import io.swagger.v3.oas.annotations.Operation
@@ -14,6 +15,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/workout-sessions")
+@HasRoleAuthenticated
 class WorkoutSessionController(
     private val workoutSessionApi: WorkoutSessionApi,
 ) {
@@ -59,7 +61,9 @@ class WorkoutSessionController(
         summary = "Gets the current workout session",
         description = "Gets the current workout session.",
     )
-    suspend fun getCurrentWorkoutSession(): WorkoutSession? = workoutSessionApi.findCurrentActiveSession()
+    suspend fun getCurrentWorkoutSession(): WorkoutSession? {
+        return workoutSessionApi.findCurrentActiveSession()
+    }
 
     // add set entry
 }

@@ -6,6 +6,7 @@ import de.powerplan.plans.application.views.PlanView
 import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.infrastructure.adapters.rest.requests.CreatePlanRequest
 import de.powerplan.shared.Pageable
+import de.powerplan.shared.auth.HasRoleAuthenticated
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -21,9 +22,11 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/plans")
+@HasRoleAuthenticated
 class PlansController(
     private val planApi: PlanApi,
 ) {
+
     @PostMapping
     @Operation(summary = "Create a new plan", description = "Create a new trainings plan")
     @ApiResponses(
@@ -69,7 +72,7 @@ class PlansController(
                         size = size,
                     ),
                 fullTextSearch = fullTextSearch ?: "",
-                onlyTemplates = true,
+                onlyTemplates = onlyTemplates,
             )
         return planApi.plans(queryFilters)
     }

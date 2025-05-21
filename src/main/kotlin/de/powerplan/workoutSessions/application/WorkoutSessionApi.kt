@@ -12,7 +12,9 @@ class WorkoutSessionApi(
     private val planTrainingDayResolver: PlanTrainingDayResolver,
     private val workoutSessionRepository: WorkoutSessionRepository,
 ) {
-    suspend fun findCurrentActiveSession(): WorkoutSession? = workoutSessionRepository.findCurrentActiveSession()
+    suspend fun findCurrentActiveSession(): WorkoutSession? {
+        return workoutSessionRepository.findCurrentActiveSession()
+    }
 
     suspend fun startNewWorkoutSession(trainingDayId: UUID): UUID {
         planTrainingDayResolver.findTrainingDayById(trainingDayId)
