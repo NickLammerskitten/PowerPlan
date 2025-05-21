@@ -28,7 +28,6 @@ class WorkoutSessionTest {
             id = UUID.randomUUID(),
             trainingDayId = UUID.randomUUID(),
             startTime = LocalDateTime.now(),
-            type = WorkoutSessionType.STRENGTH_TRAINING,
             duration = null,
             notes = null
         )
@@ -37,7 +36,6 @@ class WorkoutSessionTest {
             id = UUID.randomUUID(),
             trainingDayId = UUID.randomUUID(),
             startTime = LocalDateTime.now(),
-            type = WorkoutSessionType.STRENGTH_TRAINING,
             duration = 10000,
             notes = null
         )

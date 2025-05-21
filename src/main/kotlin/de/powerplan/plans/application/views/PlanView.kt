@@ -31,6 +31,7 @@ class TrainingDayView(
     val index: String,
     val name: String,
     val exerciseEntries: List<ExerciseEntryView>,
+    val type: String,
 )
 
 class ExerciseEntryView(

@@ -109,6 +109,7 @@ class PlanApi(
                                                         ?: throw NullPointerException("Exercise ${exerciseEntry.exerciseId} not found"),
                                             )
                                         },
+                                    type = trainingDay.type.name,
                                 )
                             },
                     )

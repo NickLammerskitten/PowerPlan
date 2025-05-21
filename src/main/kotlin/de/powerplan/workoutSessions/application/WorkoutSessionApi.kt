@@ -3,7 +3,6 @@ package de.powerplan.workoutSessions.application
 import de.powerplan.shared.PlanTrainingDayResolver
 import de.powerplan.workoutSessions.domain.WorkoutSession
 import de.powerplan.workoutSessions.domain.WorkoutSessionRepository
-import de.powerplan.workoutSessions.domain.WorkoutSessionType
 import io.ktor.server.plugins.NotFoundException
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -32,10 +31,7 @@ class WorkoutSessionApi(
         }
 
         val newWorkoutSession =
-            WorkoutSession.initialize(
-                trainingDayId = trainingDayId,
-                type = WorkoutSessionType.STRENGTH_TRAINING,
-            )
+            WorkoutSession.initialize(trainingDayId)
 
         workoutSessionRepository.upsert(newWorkoutSession)
 

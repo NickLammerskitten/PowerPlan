@@ -8,7 +8,6 @@ class WorkoutSession private constructor(
     val id: UUID,
     val trainingDayId: UUID,
     val startTime: LocalDateTime,
-    val type: WorkoutSessionType,
     // measured in seconds
     duration: Int? = null,
     val notes: String? = null,
@@ -28,26 +27,23 @@ class WorkoutSession private constructor(
     }
 
     companion object {
-        fun initialize(trainingDayId: UUID, type: WorkoutSessionType): WorkoutSession =
+        fun initialize(trainingDayId: UUID): WorkoutSession =
             create(
                 id = UUID.randomUUID(),
                 trainingDayId = trainingDayId,
                 startTime = LocalDateTime.now(),
-                type = type,
             )
 
         fun create(
             id: UUID,
             trainingDayId: UUID,
             startTime: LocalDateTime,
-            type: WorkoutSessionType,
             duration: Int? = null,
             notes: String? = null
         ) = WorkoutSession(
             id = id,
             trainingDayId = trainingDayId,
             startTime = startTime,
-            type = type,
             duration = duration,
             notes = notes,
         )

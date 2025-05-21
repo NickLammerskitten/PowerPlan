@@ -1,7 +1,6 @@
 package de.powerplan.workoutSessions.infrastructure.adapters.db.entity
 
 import de.powerplan.workoutSessions.domain.WorkoutSession
-import de.powerplan.workoutSessions.domain.WorkoutSessionType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
@@ -15,7 +14,6 @@ class WorkoutSessionDbEntity(
     val planTrainingDayId: String,
     @SerialName("start_time")
     val startTime: String,
-    val type: WorkoutSessionType,
     val duration: Int? = null,
     val notes: String? = null,
 ) {
@@ -28,7 +26,6 @@ class WorkoutSessionDbEntity(
                 id = workoutSession.id.toString(),
                 planTrainingDayId = workoutSession.trainingDayId.toString(),
                 startTime = formattedStartTime,
-                type = workoutSession.type,
                 duration = workoutSession.duration,
                 notes = workoutSession.notes,
             )
@@ -41,7 +38,6 @@ fun WorkoutSessionDbEntity.toDomain(): WorkoutSession =
         id = UUID.fromString(this.id),
         trainingDayId = UUID.fromString(planTrainingDayId),
         startTime = LocalDateTime.parse(this.startTime),
-        type = type,
         duration = duration,
         notes = notes
     )
