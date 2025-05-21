@@ -22,7 +22,7 @@ class WorkoutSessionRepositorySupabase(
                     WorkoutSessionDbEntity::planTrainingDayId eq trainingDayId
                 }
             }.decodeSingleOrNull<WorkoutSessionDbEntity>()
-            ?.toDomain(content = null)
+            ?.toDomain()
 
     override suspend fun upsert(session: WorkoutSession) {
         val sessionDbEntity = WorkoutSessionDbEntity.fromDomain(session)
@@ -40,7 +40,7 @@ class WorkoutSessionRepositorySupabase(
                     WorkoutSessionDbEntity::id eq id
                 }
             }.decodeSingleOrNull<WorkoutSessionDbEntity>()
-            ?.toDomain(content = null)
+            ?.toDomain()
 
     override suspend fun findCurrentActiveSession(): WorkoutSession? =
         dataSource
@@ -50,5 +50,5 @@ class WorkoutSessionRepositorySupabase(
                     WorkoutSessionDbEntity::duration isExact null
                 }
             }.decodeSingleOrNull<WorkoutSessionDbEntity>()
-            ?.toDomain(content = null)
+            ?.toDomain()
 }
