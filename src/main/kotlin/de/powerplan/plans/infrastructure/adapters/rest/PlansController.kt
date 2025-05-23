@@ -4,7 +4,12 @@ import de.powerplan.plans.application.PlanApi
 import de.powerplan.plans.application.views.PlanListView
 import de.powerplan.plans.application.views.PlanView
 import de.powerplan.plans.application.views.query.PlanQueryFilters
+import de.powerplan.plans.infrastructure.adapters.rest.requests.CreateExerciseEntryRequest
 import de.powerplan.plans.infrastructure.adapters.rest.requests.CreatePlanRequest
+import de.powerplan.plans.infrastructure.adapters.rest.requests.CreateSetEntryRequest
+import de.powerplan.plans.infrastructure.adapters.rest.requests.CreateTrainingDayRequest
+import de.powerplan.plans.infrastructure.adapters.rest.requests.EditExerciseEntryRequest
+import de.powerplan.plans.infrastructure.adapters.rest.requests.EditSetEntryRequest
 import de.powerplan.shared.Pageable
 import de.powerplan.shared.auth.HasRoleAuthenticated
 import io.swagger.v3.oas.annotations.Operation
@@ -160,5 +165,112 @@ class PlansController(
     )
     suspend fun finishPlan(
         @PathVariable id: String,
-    ): PlanView = planApi.finishPlan(UUID.fromString(id))
+    ): PlanView {
+        return planApi.finishPlan(UUID.fromString(id))
+    }
+
+    @PostMapping("/{id}/week")
+    suspend fun addWeek(
+        @PathVariable id: String
+    ) {
+
+    }
+
+    // TODO : Implement move week to another position (need to implement index logic)
+    /*suspend fun editWeek(
+    ) {
+
+    }*/
+
+    @DeleteMapping("/{id}/week/{weekId}")
+    suspend fun removeWeek(
+        @PathVariable id: String,
+        @PathVariable weekId: String
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day")
+    suspend fun addDay(
+        @PathVariable id: String,
+        @RequestBody request: CreateTrainingDayRequest,
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}")
+    suspend fun editDay(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @RequestBody request: CreateTrainingDayRequest,
+    ) {
+
+    }
+
+    @DeleteMapping("/{id}/day/{dayId}")
+    suspend fun removeDay(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}/exercise")
+    suspend fun addExercise(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @RequestBody request: CreateExerciseEntryRequest
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}/exercise/{exerciseId}")
+    suspend fun editExercise(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @PathVariable exerciseId: String,
+        @RequestBody request: EditExerciseEntryRequest
+    ) {
+
+    }
+
+    @DeleteMapping("/{id}/day/{dayId}/exercise/{exerciseId}")
+    suspend fun removeExercise(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @PathVariable exerciseId: String,
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}/exercise/{exerciseId}/set")
+    suspend fun addSet(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @PathVariable exerciseId: String,
+        @RequestBody request: CreateSetEntryRequest
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}/exercise/{exerciseId}/set/{setId}")
+    suspend fun editSet(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @PathVariable exerciseId: String,
+        @PathVariable setId: String,
+        @RequestBody request: EditSetEntryRequest
+    ) {
+
+    }
+
+    @PostMapping("/{id}/day/{dayId}/exercise/{exerciseId}/set/{setId}")
+    suspend fun removeSet(
+        @PathVariable id: String,
+        @PathVariable dayId: String,
+        @PathVariable exerciseId: String,
+        @PathVariable setId: String,
+    ) {
+
+    }
 }
