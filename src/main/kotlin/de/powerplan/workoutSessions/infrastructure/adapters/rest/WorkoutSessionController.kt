@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,6 +23,7 @@ import java.util.UUID
 @RestController
 @RequestMapping("/workout-sessions")
 @HasRoleAuthenticated
+@Tag(name = "Workout Sessions")
 class WorkoutSessionController(
     private val workoutSessionApi: WorkoutSessionApi,
 ) {
@@ -107,7 +109,7 @@ class WorkoutSessionController(
             ?: throw NotFoundException("No active workout session found")
     }
 
-    @PostMapping("/{workoutSessionId}/workoutSet")
+    @PostMapping("/{workoutSessionId}/workout-set")
     @Operation(
         summary = "Adds a new workout set",
         description = "Adds a new workout set for the given setId to a workout session.",
@@ -144,7 +146,7 @@ class WorkoutSessionController(
         )
     }
 
-    @PostMapping("/{workoutSessionId}/workoutSet/{workoutSetId}")
+    @PostMapping("/{workoutSessionId}/workout-set/{workoutSetId}")
     @Operation(
         summary = "Updates a workout set",
         description = "Updates a workout set for the given setId.",

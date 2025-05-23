@@ -6,3 +6,7 @@ spring:
     url: ${POWERPLAN_SUPABASE_URL}
     key: ${POWERPLAN_SUPABASE_ANON_KEY}
     schema: public
+
+springdoc:
+  swagger-ui:
+    operations-sorter: alpha
