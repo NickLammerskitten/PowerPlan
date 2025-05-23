@@ -129,7 +129,9 @@ class PlansController(
     )
     suspend fun startPlan(
         @PathVariable id: String,
-    ): PlanView = planApi.startNewPlan(UUID.fromString(id))
+    ): PlanView {
+        return planApi.startNewPlan(UUID.fromString(id))
+    }
 
     @PostMapping("/{id}/finish")
     @Operation(summary = "Finish a plan", description = "Finish a trainings plan")

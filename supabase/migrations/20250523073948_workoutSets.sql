@@ -1,14 +1,17 @@
 create table public.workout_sets
 (
-    id               uuid not null
+    id                 uuid not null
         constraint workout_sets_pk
             primary key,
-    set_id           uuid not null
+    workout_session_id uuid not null
+        constraint workout_sets_workout_session_id_fk
+            references public.workout_sessions,
+    set_id             uuid not null
         constraint workout_sets_plans_sets_id_fk
             references public.plans_sets,
-    weight           numeric,
-    reps             integer,
-    duration_seconds integer
+    weight             numeric,
+    reps               integer,
+    duration_seconds   integer
 );
 
 alter table public.workout_sets

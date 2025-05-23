@@ -3,11 +3,16 @@ package de.powerplan.workoutSessions.infrastructure.adapters.rest
 import de.powerplan.shared.auth.HasRoleAuthenticated
 import de.powerplan.workoutSessions.application.WorkoutSessionApi
 import de.powerplan.workoutSessions.application.views.WorkoutSessionView
+import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.CreateWorkoutSetRequest
+import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.UpdateWorkoutSetRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -65,5 +70,47 @@ class WorkoutSessionController(
         return workoutSessionApi.findCurrentActiveSession()
     }
 
-    // add set entry
+    @PutMapping("/{workoutSessionId}/workoutSet")
+    @Operation(
+        summary = "Creates a new workout set",
+        description = "Creates a new workout set for the given setId.",
+    )
+    suspend fun createWorkoutSet(
+        @PathVariable(
+            value = "workoutSessionId",
+            required = true,
+        ) workoutSessionId: String,
+        @RequestBody() request: CreateWorkoutSetRequest
+    ) {
+        workoutSessionApi.createWorkoutSet(
+            command = request.toCommand(
+                workoutSessionId = workoutSessionId,
+            )
+        )
+    }
+
+    // update workout set
+    @PostMapping("/{workoutSessionId}/workoutSet/{workoutSetId}")
+    @Operation(
+        summary = "Updates a workout set",
+        description = "Updates a workout set for the given setId.",
+    )
+    suspend fun updateWorkoutSet(
+        @PathVariable(
+            value = "workoutSessionId",
+            required = true,
+        ) workoutSessionId: String,
+        @PathVariable(
+            value = "workoutSetId",
+            required = true,
+        ) workoutSetId: String,
+        @RequestBody() request: UpdateWorkoutSetRequest
+    ) {
+        workoutSessionApi.updateWorkoutSet(
+            command = request.toCommand(
+                workoutSessionId = UUID.fromString(workoutSessionId),
+                workoutSetId = UUID.fromString(workoutSetId),
+            )
+        )
+    }
 }

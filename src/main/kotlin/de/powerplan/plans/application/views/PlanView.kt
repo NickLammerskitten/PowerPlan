@@ -28,6 +28,7 @@ class WeekView(
 )
 
 class TrainingDayView(
+    val id: String,
     val index: String,
     val name: String,
     val exerciseEntries: List<ExerciseEntryView>,

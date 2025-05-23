@@ -98,6 +98,7 @@ class PlanApi(
                         trainingDays =
                             week.trainingDays.map { trainingDay ->
                                 TrainingDayView(
+                                    id = trainingDay.id.toString(),
                                     index = trainingDay.index.value,
                                     name = trainingDay.name,
                                     exerciseEntries =
