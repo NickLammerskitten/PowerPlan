@@ -5,13 +5,13 @@ import de.powerplan.workoutSessions.application.WorkoutSessionApi
 import de.powerplan.workoutSessions.application.views.WorkoutSessionView
 import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.CreateWorkoutSetRequest
 import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.UpdateWorkoutSetRequest
+import io.ktor.server.plugins.NotFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -50,12 +50,30 @@ class WorkoutSessionController(
             value = "trainingDayId",
             required = true,
         ) trainingDayId: String,
-    ): UUID = workoutSessionApi.startNewWorkoutSession(UUID.fromString(trainingDayId))
+    ): UUID {
+        return workoutSessionApi.startNewWorkoutSession(UUID.fromString(trainingDayId))
+    }
 
     @PostMapping("/finish")
     @Operation(
         summary = "Finishes the current workout session",
         description = "Finishes the current workout session.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Workout session finished successfully",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "No active workout session found",
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Workout session already finished",
+            )
+        ],
     )
     suspend fun finishWorkoutSession() {
         workoutSessionApi.finishWorkoutSession()
@@ -66,14 +84,43 @@ class WorkoutSessionController(
         summary = "Gets the current workout session",
         description = "Gets the current workout session.",
     )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Workout session found",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "No active workout session found",
+            )
+        ],
+    )
     suspend fun getCurrentWorkoutSession(): WorkoutSessionView? {
         return workoutSessionApi.findCurrentActiveSession()
+            ?: throw NotFoundException("No active workout session found")
     }
 
-    @PutMapping("/{workoutSessionId}/workoutSet")
+    @PostMapping("/{workoutSessionId}/workoutSet")
     @Operation(
-        summary = "Creates a new workout set",
-        description = "Creates a new workout set for the given setId.",
+        summary = "Adds a new workout set",
+        description = "Adds a new workout set for the given setId to a workout session.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Workout set added successfully",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Workout session not found",
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Workout set already exists",
+            )
+        ],
     )
     suspend fun createWorkoutSet(
         @PathVariable(
@@ -89,11 +136,26 @@ class WorkoutSessionController(
         )
     }
 
-    // update workout set
     @PostMapping("/{workoutSessionId}/workoutSet/{workoutSetId}")
     @Operation(
         summary = "Updates a workout set",
         description = "Updates a workout set for the given setId.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Workout set updated successfully",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Workout session or training day not found",
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Workout set does not exist",
+            )
+        ],
     )
     suspend fun updateWorkoutSet(
         @PathVariable(

@@ -106,11 +106,7 @@ class WorkoutSessionApi(
     suspend fun finishWorkoutSession() {
         val workoutSession =
             workoutSessionRepository.findCurrentActiveSession()
-                ?: throw IllegalArgumentException("No active workout session exists.")
-
-        if (workoutSession.isFinished()) {
-            throw IllegalStateException("Workout session already finished.")
-        }
+                ?: throw NotFoundException("No active workout session exists.")
 
         workoutSession.finish()
 
