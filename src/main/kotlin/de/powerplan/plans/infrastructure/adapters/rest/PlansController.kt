@@ -8,6 +8,7 @@ import de.powerplan.plans.infrastructure.adapters.rest.requests.CreatePlanReques
 import de.powerplan.shared.Pageable
 import de.powerplan.shared.auth.HasRoleAuthenticated
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -35,6 +36,11 @@ class PlansController(
                 responseCode = "200",
                 description = "Plan created successfully",
             ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid request parameters",
+                content = [Content()]
+            ),
         ],
     )
     suspend fun createPlan(
@@ -55,6 +61,7 @@ class PlansController(
             ApiResponse(
                 responseCode = "400",
                 description = "Invalid request parameters",
+                content = [Content()]
             ),
         ],
     )
@@ -88,6 +95,7 @@ class PlansController(
             ApiResponse(
                 responseCode = "404",
                 description = "Plan not found",
+                content = [Content()]
             ),
         ],
     )
@@ -106,6 +114,7 @@ class PlansController(
             ApiResponse(
                 responseCode = "400",
                 description = "Plan cannot be deleted because it is not a template",
+                content = [Content()]
             ),
         ],
     )
@@ -124,6 +133,7 @@ class PlansController(
             ApiResponse(
                 responseCode = "404",
                 description = "Plan not found",
+                content = [Content()]
             ),
         ],
     )
@@ -144,6 +154,7 @@ class PlansController(
             ApiResponse(
                 responseCode = "404",
                 description = "Plan not found",
+                content = [Content()]
             ),
         ],
     )

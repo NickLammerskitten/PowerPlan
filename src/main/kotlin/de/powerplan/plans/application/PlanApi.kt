@@ -107,7 +107,7 @@ class PlanApi(
                                                 exerciseEntry = exerciseEntry,
                                                 exerciseName =
                                                     exerciseMap[exerciseEntry.exerciseId]
-                                                        ?: throw NullPointerException("Exercise ${exerciseEntry.exerciseId} not found"),
+                                                        ?: throw IllegalArgumentException("Exercise ${exerciseEntry.exerciseId} not found"),
                                             )
                                         },
                                     type = trainingDay.type.name,

@@ -9,6 +9,7 @@ import de.powerplan.shared.auth.HasRoleAuthenticated
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.PathVariable
@@ -35,6 +36,7 @@ class ExercisesController(
             ApiResponse(
                 responseCode = "400",
                 description = "Invalid request parameters",
+                content = [Content()]
             ),
         ],
     )
@@ -72,6 +74,7 @@ class ExercisesController(
             ApiResponse(
                 responseCode = "404",
                 description = "Exercise not found",
+                content = [Content()]
             ),
         ],
     )

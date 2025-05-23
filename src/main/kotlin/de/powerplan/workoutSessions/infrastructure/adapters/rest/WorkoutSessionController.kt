@@ -7,6 +7,7 @@ import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.Create
 import de.powerplan.workoutSessions.infrastructure.adapters.rest.requests.UpdateWorkoutSetRequest
 import io.ktor.server.plugins.NotFoundException
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
@@ -33,15 +34,17 @@ class WorkoutSessionController(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Workout session started successfully",
+                description = "Workout session started successfully"
             ),
             ApiResponse(
                 responseCode = "404",
                 description = "Training day not found",
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "409",
                 description = "An active workout session already exists. Only one workout session can be active at a time.",
+                content = [Content()]
             ),
         ],
     )
@@ -57,7 +60,7 @@ class WorkoutSessionController(
     @PostMapping("/finish")
     @Operation(
         summary = "Finishes the current workout session",
-        description = "Finishes the current workout session.",
+        description = "Finishes the current workout session."
     )
     @ApiResponses(
         value = [
@@ -68,10 +71,12 @@ class WorkoutSessionController(
             ApiResponse(
                 responseCode = "404",
                 description = "No active workout session found",
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "409",
                 description = "Workout session already finished",
+                content = [Content()]
             )
         ],
     )
@@ -93,6 +98,7 @@ class WorkoutSessionController(
             ApiResponse(
                 responseCode = "404",
                 description = "No active workout session found",
+                content = [Content()]
             )
         ],
     )
@@ -115,10 +121,12 @@ class WorkoutSessionController(
             ApiResponse(
                 responseCode = "404",
                 description = "Workout session not found",
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "409",
                 description = "Workout set already exists",
+                content = [Content()]
             )
         ],
     )
@@ -150,10 +158,12 @@ class WorkoutSessionController(
             ApiResponse(
                 responseCode = "404",
                 description = "Workout session or training day not found",
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "409",
                 description = "Workout set does not exist",
+                content = [Content()]
             )
         ],
     )
