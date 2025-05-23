@@ -1,6 +1,7 @@
 package de.powerplan.shareddomain
 
 import de.powerplan.shared.Index
+import de.powerplan.shared.IndexService
 import java.util.UUID
 
 data class ExerciseEntry(
@@ -11,24 +12,24 @@ data class ExerciseEntry(
 ) {
     companion object {
         fun initialize(
-            index: String,
+            exerciseIndexes: List<Index>,
             exerciseId: UUID,
             sets: List<SetEntry>,
         ) = create(
             id = UUID.randomUUID(),
-            index = index,
+            index = IndexService.next(exerciseIndexes),
             exerciseId = exerciseId,
             sets = sets,
         )
 
         fun create(
             id: UUID,
-            index: String,
+            index: Index,
             exerciseId: UUID,
             sets: List<SetEntry>,
         ) = ExerciseEntry(
             id = id,
-            index = Index.of(index),
+            index = index,
             exerciseId = exerciseId,
             sets = sets,
         )

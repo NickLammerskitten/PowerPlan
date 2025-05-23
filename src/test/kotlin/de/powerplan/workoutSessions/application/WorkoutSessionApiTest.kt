@@ -1,6 +1,7 @@
 package de.powerplan.workoutSessions.application
 
 import de.powerplan.shared.Index
+import de.powerplan.shared.IndexService
 import de.powerplan.shared.PlanTrainingDayResolver
 import de.powerplan.shared.TrainingType
 import de.powerplan.shareddomain.TrainingDay
@@ -225,7 +226,7 @@ class WorkoutSessionApiTest {
 
         fun trainingDay(id: UUID) = TrainingDay(
             id = id,
-            index = Index.of("-1"),
+            index = IndexService.next(emptyList()),
             name = "Day 1",
             exerciseEntries = emptyList(),
             type = TrainingType.STRENGTH_TRAINING,

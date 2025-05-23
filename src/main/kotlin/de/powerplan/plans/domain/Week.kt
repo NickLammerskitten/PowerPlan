@@ -1,6 +1,7 @@
 package de.powerplan.plans.domain
 
 import de.powerplan.shared.Index
+import de.powerplan.shared.IndexService
 import de.powerplan.shareddomain.TrainingDay
 import java.util.UUID
 
@@ -11,21 +12,21 @@ data class Week(
 ) {
     companion object {
         fun initialize(
-            index: String,
+            weekIndexes: List<Index>,
             trainingDays: List<TrainingDay>,
         ) = Week(
             id = UUID.randomUUID(),
-            index = Index.of(index),
+            index = IndexService.next(weekIndexes),
             trainingDays = trainingDays,
         )
 
         fun create(
             id: UUID,
-            index: String,
+            index: Index,
             trainingDays: List<TrainingDay>,
         ) = Week(
             id = id,
-            index = Index.of(index),
+            index = index,
             trainingDays = trainingDays,
         )
     }

@@ -2,6 +2,7 @@ package de.powerplan.plans.application.commands
 
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.Week
+import de.powerplan.shared.Index
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.shareddomain.ExerciseEntry
@@ -18,44 +19,61 @@ class CreatePlanCommand(
     val classifications: List<Classification> = emptyList(),
     val weeks: List<CreateTrainingWeekCommand>,
 ) {
-    fun toDomain(): Plan =
-        Plan.initialize(
+    fun toDomain(): Plan {
+        val weeks: MutableList<Week> = mutableListOf()
+        this.weeks.map { createTrainingWeekCommand ->
+            val weekIndexes = weeks.map { it.index }
+            val week = createTrainingWeekCommand.toDomain(weekIndexes)
+            weeks.add(week)
+        }
+
+        return Plan.initialize(
             name = this.name,
             difficultyLevel = this.difficultyLevel,
             classifications = this.classifications,
-            weeks =
-                this.weeks.map { createTrainingWeekCommand ->
-                    createTrainingWeekCommand.toDomain("-1")
-                },
+            weeks = weeks
         )
+    }
 }
 
 class CreateTrainingWeekCommand(
     val trainingDays: List<CreateTrainingDayCommand>,
 ) {
-    fun toDomain(index: String): Week =
-        Week.initialize(
-            index = index,
-            trainingDays =
-                trainingDays.map { createTrainingDayCommand ->
-                    createTrainingDayCommand.toDomain("-1")
-                },
+    fun toDomain(weekIndexes: List<Index>): Week {
+        val trainingDays: MutableList<TrainingDay> = mutableListOf()
+
+        this.trainingDays.map { createTrainingDayCommand ->
+            val trainingDayIndexes = trainingDays.map { it.index }
+            val trainingDay = createTrainingDayCommand.toDomain(trainingDayIndexes)
+            trainingDays.add(trainingDay)
+        }
+
+        return Week.initialize(
+            weekIndexes = weekIndexes,
+            trainingDays = trainingDays
         )
+    }
 }
 
 class CreateTrainingDayCommand(
     val name: String?,
     val exercises: List<CreateExerciseEntryCommand>,
 ) {
-    fun toDomain(index: String): TrainingDay =
-        TrainingDay.initialize(
-            index = index,
+    fun toDomain(trainingDayIndexes: List<Index>): TrainingDay {
+        val exerciseEntries: MutableList<ExerciseEntry> = mutableListOf()
+
+        this.exercises.map { createExerciseEntryCommand ->
+            val exerciseIndexes = exerciseEntries.map { it.index }
+            val exerciseEntry = createExerciseEntryCommand.toDomain(exerciseIndexes)
+            exerciseEntries.add(exerciseEntry)
+        }
+
+        return TrainingDay.initialize(
+            trainingDayIndexes = trainingDayIndexes,
             name = this.name,
-            exerciseEntries =
-                this.exercises.map { createExerciseEntryCommand ->
-                    createExerciseEntryCommand.toDomain("-1")
-                },
+            exerciseEntries = exerciseEntries,
         )
+    }
 }
 
 class CreateExerciseEntryCommand(
@@ -64,19 +82,21 @@ class CreateExerciseEntryCommand(
     val goalSchemeType: GoalSchemeType,
     val sets: List<CreateSetEntryCommand>,
 ) {
-    fun toDomain(index: String): ExerciseEntry =
-        ExerciseEntry.initialize(
-            index = index,
+    fun toDomain(exerciseIndexes: List<Index>): ExerciseEntry {
+        val sets: MutableList<SetEntry> = mutableListOf()
+
+        this.sets.map { createSetEntryCommand ->
+            val setIndexes = sets.map { it.index }
+            val setEntry = createSetEntryCommand.toDomain(setIndexes, repetitionSchemeType, goalSchemeType)
+            sets.add(setEntry)
+        }
+
+        return ExerciseEntry.initialize(
+            exerciseIndexes = exerciseIndexes,
             exerciseId = this.exerciseId,
-            sets =
-                this.sets.map { createSetEntryCommand ->
-                    createSetEntryCommand.toDomain(
-                        index = "-1",
-                        repetitionSchemeType = repetitionSchemeType,
-                        goalSchemeType = goalSchemeType,
-                    )
-                },
+            sets = sets
         )
+    }
 }
 
 class CreateSetEntryCommand(
@@ -91,12 +111,12 @@ class CreateSetEntryCommand(
     val percent1RM: Double? = null,
 ) {
     fun toDomain(
-        index: String,
+        setIndexes: List<Index>,
         repetitionSchemeType: RepetitionSchemeType,
         goalSchemeType: GoalSchemeType,
     ): SetEntry =
         SetEntry.initialize(
-            index = index,
+            setIndexes = setIndexes,
             repetitions =
                 SetEntryFactory.createRepetitionScheme(
                     type = repetitionSchemeType,

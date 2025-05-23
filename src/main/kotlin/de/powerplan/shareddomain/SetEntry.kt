@@ -1,6 +1,7 @@
 package de.powerplan.shareddomain
 
 import de.powerplan.shared.Index
+import de.powerplan.shared.IndexService
 import java.util.UUID
 
 data class SetEntry(
@@ -11,24 +12,24 @@ data class SetEntry(
 ) {
     companion object {
         fun initialize(
-            index: String,
+            setIndexes: List<Index>,
             repetitions: RepetitionScheme,
             goal: GoalScheme,
-        ) = create(
+        ) = SetEntry(
             id = UUID.randomUUID(),
-            index = index,
+            index = IndexService.next(setIndexes),
             repetitions = repetitions,
             goal = goal,
         )
 
         fun create(
             id: UUID,
-            index: String,
+            index: Index,
             repetitions: RepetitionScheme,
             goal: GoalScheme,
         ) = SetEntry(
             id = id,
-            index = Index.of(index),
+            index = index,
             repetitions = repetitions,
             goal = goal,
         )

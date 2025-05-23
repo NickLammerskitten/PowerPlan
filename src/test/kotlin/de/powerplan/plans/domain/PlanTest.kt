@@ -33,7 +33,7 @@ class PlanTest {
                 weeks =
                     listOf(
                         Week.initialize(
-                            index = "-1",
+                            weekIndexes = emptyList(),
                             trainingDays = emptyList(),
                         ),
                     ),
@@ -52,7 +52,7 @@ class PlanTest {
                 weeks =
                     List(19) {
                         Week.initialize(
-                            index = it.toString(),
+                            weekIndexes = emptyList(),
                             trainingDays = emptyList(),
                         )
                     },
@@ -84,7 +84,7 @@ class PlanTest {
                 weeks =
                     listOf(
                         Week.initialize(
-                            index = "-1",
+                            weekIndexes = emptyList(),
                             trainingDays = emptyList(),
                         ),
                     ),
@@ -105,7 +105,7 @@ class PlanTest {
                 weeks =
                     listOf(
                         Week.initialize(
-                            index = "-1",
+                            weekIndexes = emptyList(),
                             trainingDays = emptyList(),
                         ),
                     ),
@@ -149,7 +149,7 @@ class PlanTest {
                 weeks =
                     listOf(
                         Week.initialize(
-                            index = "-1",
+                            weekIndexes = emptyList(),
                             trainingDays = emptyList(),
                         ),
                     ),
