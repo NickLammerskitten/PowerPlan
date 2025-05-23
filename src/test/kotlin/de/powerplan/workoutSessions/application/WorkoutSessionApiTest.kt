@@ -6,6 +6,7 @@ import de.powerplan.shared.TrainingType
 import de.powerplan.shareddomain.TrainingDay
 import de.powerplan.workoutSessions.domain.WorkoutSession
 import de.powerplan.workoutSessions.domain.WorkoutSessionRepository
+import de.powerplan.workoutSessions.domain.WorkoutSetRepository
 import io.ktor.server.plugins.NotFoundException
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -31,12 +32,19 @@ class WorkoutSessionApiTest {
     @Mock
     private lateinit var workoutSessionRepository: WorkoutSessionRepository
 
+    @Mock
+    private lateinit var workoutSetRepository: WorkoutSetRepository
+
     private lateinit var workoutSessionApi: WorkoutSessionApi
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        workoutSessionApi = WorkoutSessionApi(planTrainingDayResolver, workoutSessionRepository)
+        workoutSessionApi = WorkoutSessionApi(
+            planTrainingDayResolver = planTrainingDayResolver,
+            workoutSessionRepository = workoutSessionRepository,
+            workoutSetRepository = workoutSetRepository
+        )
     }
 
     @Test
@@ -49,11 +57,13 @@ class WorkoutSessionApiTest {
             )
 
             `when`(workoutSessionRepository.findCurrentActiveSession()).thenReturn(expectedSession)
+            `when`(planTrainingDayResolver.findTrainingDayById(expectedSession.trainingDayId))
+                .thenReturn(trainingDay(expectedSession.trainingDayId))
 
             val result = workoutSessionApi.findCurrentActiveSession()
 
             assertNotNull(result)
-            assertEquals(expectedSession.id, result.id)
+            assertEquals(expectedSession.id.toString(), result.id)
         }
     }
 
@@ -65,6 +75,24 @@ class WorkoutSessionApiTest {
             val result = workoutSessionApi.findCurrentActiveSession()
 
             assertEquals(null, result)
+        }
+    }
+
+    @Test
+    fun `findCurrentActiveSession throws NotFoundException when training day does not exist`() {
+        runBlocking {
+            val activeSession = WorkoutSession.create(
+                id = UUID.randomUUID(),
+                trainingDayId = UUID.randomUUID(),
+                startTime = LocalDateTime.now(),
+            )
+
+            `when`(workoutSessionRepository.findCurrentActiveSession()).thenReturn(activeSession)
+            `when`(planTrainingDayResolver.findTrainingDayById(activeSession.trainingDayId)).thenReturn(null)
+
+            assertThrows<NotFoundException> {
+                workoutSessionApi.findCurrentActiveSession()
+            }
         }
     }
 

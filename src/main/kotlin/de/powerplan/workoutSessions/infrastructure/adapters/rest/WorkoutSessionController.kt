@@ -2,7 +2,7 @@ package de.powerplan.workoutSessions.infrastructure.adapters.rest
 
 import de.powerplan.shared.auth.HasRoleAuthenticated
 import de.powerplan.workoutSessions.application.WorkoutSessionApi
-import de.powerplan.workoutSessions.domain.WorkoutSession
+import de.powerplan.workoutSessions.application.views.WorkoutSessionView
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -61,7 +61,7 @@ class WorkoutSessionController(
         summary = "Gets the current workout session",
         description = "Gets the current workout session.",
     )
-    suspend fun getCurrentWorkoutSession(): WorkoutSession? {
+    suspend fun getCurrentWorkoutSession(): WorkoutSessionView? {
         return workoutSessionApi.findCurrentActiveSession()
     }
 
