@@ -4,11 +4,11 @@ create table public.workout_sets
         constraint workout_sets_pk
             primary key,
     workout_session_id uuid not null
-        constraint workout_sets_workout_session_id_fk
-            references public.workout_sessions,
+        references public.workout_sessions
+            on update cascade on delete cascade,
     set_id             uuid not null
-        constraint workout_sets_plans_sets_id_fk
-            references public.plans_sets,
+        references public.plans_sets
+            on update cascade on delete cascade,
     weight             numeric,
     reps               integer,
     duration_seconds   integer
