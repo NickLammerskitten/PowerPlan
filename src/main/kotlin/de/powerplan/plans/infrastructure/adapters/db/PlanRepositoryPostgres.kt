@@ -69,8 +69,8 @@ class PlanRepositoryPostgres(
         }
     }
 
-    override suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity> =
-        dataSource
+    override suspend fun findPlans(queryFilters: PlanQueryFilters): List<PlanDbEntity> {
+        return dataSource
             .from("plans")
             .select(Columns.ALL) {
                 range(queryFilters.pageable.range())
@@ -87,6 +87,7 @@ class PlanRepositoryPostgres(
                     }
                 }
             }.decodeList<PlanDbEntity>()
+    }
 
     override suspend fun findById(id: UUID): Plan? {
         val planDbEntityDto =

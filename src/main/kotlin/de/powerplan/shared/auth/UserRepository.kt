@@ -11,10 +11,10 @@ class UserRepository(private val supabaseClient: SupabaseClient) {
 
     suspend fun getUserInfo(jwtToken: String): UserInfo {
         try {
-            return supabaseClient.auth.retrieveUser(jwtToken)
+            supabaseClient.auth.importAuthToken(jwtToken);
+            return supabaseClient.auth.retrieveUserForCurrentSession()
         } catch (e: Exception) {
             throw BadCredentialsException("Invalid token", e)
         }
-
     }
 }
