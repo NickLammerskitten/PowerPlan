@@ -1,6 +1,5 @@
 package de.powerplan.plans.application
 
-import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.plans.domain.PlanWeekRepository
 import de.powerplan.plans.domain.Week
 import de.powerplan.shared.IndexService
@@ -10,12 +9,12 @@ import java.util.UUID
 
 @Component
 class PlanWeekApi(
-    private val planRepository: PlanRepository,
+    private val planViewRepository: PlanViewRepository,
     private val planWeekRepository: PlanWeekRepository
 ) {
 
     suspend fun addWeek(planId: UUID) {
-        val plan = planRepository.findById(planId)
+        val plan = planViewRepository.findById(planId)
             ?: throw NotFoundException("Plan with id $planId not found")
 
         val planWeeksIndexes = plan.weeks.map { it.index }
@@ -38,7 +37,7 @@ class PlanWeekApi(
         weekId: UUID,
         weekIdBefore: UUID? = null
     ) {
-        val plan = planRepository.findById(planId)
+        val plan = planViewRepository.findById(planId)
             ?: throw NotFoundException("Plan with id $planId not found")
 
         val weeks = plan.weeks

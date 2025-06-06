@@ -12,6 +12,7 @@ import java.util.UUID
 class PlanDayRepositoryPostgres(
     private val dataSource: SupabaseClient
 ) : PlanDayRepository {
+
     override suspend fun upsert(weekId: UUID, day: TrainingDay) {
         val dayDbEntity = day.toDbEntity(weekId)
 

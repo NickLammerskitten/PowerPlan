@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("plans/exercise/{exerciseId}/set")
+@RequestMapping("plans/{planId}/set")
 @Tag(name = "Plan Exercise Sets")
 class PlanSetController {
 
     @PostMapping
     suspend fun addSet(
-        @PathVariable exerciseId: String,
+        @PathVariable planId: String,
         @RequestBody request: CreateSetEntryRequest
     ): ResponseEntity<Unit> {
 
@@ -27,7 +27,7 @@ class PlanSetController {
 
     @PostMapping("/{setId}")
     suspend fun editSet(
-        @PathVariable exerciseId: String,
+        @PathVariable planId: String,
         @PathVariable setId: String,
         @RequestBody request: EditSetEntryRequest
     ): ResponseEntity<Unit> {
@@ -37,7 +37,7 @@ class PlanSetController {
 
     @DeleteMapping("/{setId}")
     suspend fun removeSet(
-        @PathVariable exerciseId: String,
+        @PathVariable planId: String,
         @PathVariable setId: String,
     ): ResponseEntity<Unit> {
 

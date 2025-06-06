@@ -20,14 +20,20 @@ import java.util.UUID
 class PlanApi(
     private val exerciseViewResolver: DefaultExerciseViewResolver,
     private val planRepository: PlanRepository,
+    private val planViewRepository: PlanViewRepository,
 ) {
-    suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView =
-        planToView(
-            planRepository.upsert(createPlanCommand.toDomain()),
+    suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
+        val id = planRepository.upsert(createPlanCommand.toDomain())
+        return planToView(
+            planViewRepository.findById(id) ?: throw NotFoundException(
+                "Plan with id $id not found"
+            )
         )
+    }
+
 
     suspend fun plans(queryFilters: PlanQueryFilters): List<PlanListView> {
-        val planDbEntities = planRepository.findPlans(queryFilters)
+        val planDbEntities = planViewRepository.findPlans(queryFilters)
         return planDbEntities.map { planDbEntity ->
             PlanListView(
                 id = planDbEntity.id,
@@ -41,12 +47,12 @@ class PlanApi(
     }
 
     suspend fun getPlan(id: UUID): PlanView {
-        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
+        val plan = planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         return planToView(plan)
     }
 
     suspend fun deletePlan(id: UUID) {
-        val plan = planRepository.findById(id) ?: return
+        val plan = planViewRepository.findById(id) ?: return
 
         if (!plan.isTemplate) {
             throw IllegalArgumentException("Cannot delete an active plan. Please finish it.")
@@ -56,26 +62,31 @@ class PlanApi(
     }
 
     suspend fun startNewPlan(id: UUID): PlanView {
-        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
+        val plan = planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
 
         val newPlan = plan.startNew()
 
+
+        val id = planRepository.upsert(newPlan)
         return planToView(
-            planRepository.upsert(newPlan),
+            planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         )
     }
 
     suspend fun finishPlan(id: UUID): PlanView {
-        val plan = planRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
+        val plan = planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
 
         plan.finish()
 
+        val id = planRepository.upsert(plan)
         return planToView(
-            planRepository.upsert(plan),
+            planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         )
     }
 
-    suspend fun findTrainingDayById(id: UUID): TrainingDay? = planRepository.findTrainingDayById(id)
+    suspend fun findTrainingDayById(id: UUID): TrainingDay? {
+        return planViewRepository.findTrainingDayById(id)
+    }
 
     private suspend fun planToView(plan: Plan): PlanView {
         val exerciseIds =

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("plans/{planId}/week/day")
+@RequestMapping("plans/{planId}/day")
 @Tag(name = "Plan Days")
 class PlanDayController(
     private val planDayApi: PlanDayApi

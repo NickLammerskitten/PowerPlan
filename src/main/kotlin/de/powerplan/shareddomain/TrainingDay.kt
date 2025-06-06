@@ -19,6 +19,12 @@ data class TrainingDay(
         return this.copy(name = name)
     }
 
+    fun updateExerciseEntries(
+        exerciseEntries: List<ExerciseEntry>
+    ): TrainingDay {
+        return this.copy(exerciseEntries = exerciseEntries)
+    }
+
     companion object {
         fun initialize(
             trainingDayIndexes: List<Index>,

@@ -3,7 +3,6 @@ package de.powerplan.plans.application
 import de.powerplan.plans.application.commands.CreateTrainingDayCommand
 import de.powerplan.plans.application.commands.EditTrainingDayCommand
 import de.powerplan.plans.domain.PlanDayRepository
-import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shared.IndexService
 import de.powerplan.shareddomain.TrainingDay
 import io.ktor.server.plugins.NotFoundException
@@ -12,14 +11,14 @@ import java.util.UUID
 
 @Component
 class PlanDayApi(
-    private val planRepository: PlanRepository,
+    private val planViewRepository: PlanViewRepository,
     private val planDayRepository: PlanDayRepository
 ) {
 
     suspend fun createDay(
         command: CreateTrainingDayCommand
     ) {
-        val plan = planRepository.findById(command.planId)
+        val plan = planViewRepository.findById(command.planId)
             ?: throw NotFoundException("Plan with id ${command.planId} not found")
         val week = plan.weeks.find { it.id == command.weekId }
             ?: throw NotFoundException("Week with id ${command.weekId} not found in plan ${command.planId}")
@@ -41,7 +40,7 @@ class PlanDayApi(
     }
 
     suspend fun editDay(command: EditTrainingDayCommand) {
-        val plan = planRepository.findById(command.planId)
+        val plan = planViewRepository.findById(command.planId)
             ?: throw NotFoundException("Plan with id ${command.planId} not found")
         val week = plan.weeks.find { it.id == command.weekId }
             ?: throw NotFoundException("Week with id ${command.weekId} not found in plan ${command.planId}")
@@ -60,10 +59,13 @@ class PlanDayApi(
         dayId: UUID,
         dayIdBefore: UUID? = null
     ) {
-        val plan = planRepository.findById(planId)
+        val plan = planViewRepository.findById(planId)
             ?: throw NotFoundException("Plan with id $planId not found")
-        val week = plan.weeks.find { it.trainingDays.any { it.id == dayId } }
-            ?: throw NotFoundException("Week containing day with id $dayId not found in plan $planId")
+        val week = plan.weeks.find { week ->
+            week.trainingDays.any { trainingDay ->
+                trainingDay.id == dayId
+            }
+        } ?: throw NotFoundException("Week containing day with id $dayId not found in plan $planId")
         val trainingDay = week.trainingDays.find { it.id == dayId }
             ?: throw NotFoundException("Training day with id $dayId not found in week ${week.id}")
 
