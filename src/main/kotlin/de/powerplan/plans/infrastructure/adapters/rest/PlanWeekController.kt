@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,8 +38,10 @@ class PlanWeekController(
     )
     suspend fun addWeek(
         @PathVariable id: String
-    ) {
+    ): ResponseEntity<Unit> {
         planWeekApi.addWeek(UUID.fromString(id))
+
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/{weekId}/move")
@@ -46,19 +49,23 @@ class PlanWeekController(
         @PathVariable id: String,
         @PathVariable weekId: String,
         @RequestParam(value = "weekIdBefore", required = false) weekIdBefore: String? = null,
-    ) {
+    ): ResponseEntity<Unit> {
         planWeekApi.moveWeek(
             planId = UUID.fromString(id),
             weekId = UUID.fromString(weekId),
             weekIdBefore = weekIdBefore?.let { UUID.fromString(it) }
         )
+
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{weekId}")
     suspend fun removeWeek(
         @PathVariable id: String,
         @PathVariable weekId: String
-    ) {
+    ): ResponseEntity<Unit> {
         planWeekApi.deleteWeek(UUID.fromString(weekId))
+
+        return ResponseEntity.ok().build()
     }
 }

@@ -3,6 +3,7 @@ package de.powerplan.plans.infrastructure.adapters.rest
 import de.powerplan.plans.infrastructure.adapters.rest.requests.CreateSetEntryRequest
 import de.powerplan.plans.infrastructure.adapters.rest.requests.EditSetEntryRequest
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,8 +20,9 @@ class PlanSetController {
     suspend fun addSet(
         @PathVariable exerciseId: String,
         @RequestBody request: CreateSetEntryRequest
-    ) {
+    ): ResponseEntity<Unit> {
 
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/{setId}")
@@ -28,15 +30,17 @@ class PlanSetController {
         @PathVariable exerciseId: String,
         @PathVariable setId: String,
         @RequestBody request: EditSetEntryRequest
-    ) {
+    ): ResponseEntity<Unit> {
 
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{setId}")
     suspend fun removeSet(
         @PathVariable exerciseId: String,
         @PathVariable setId: String,
-    ) {
+    ): ResponseEntity<Unit> {
 
+        return ResponseEntity.ok().build()
     }
 }
