@@ -20,17 +20,16 @@ class PlanWeekApi(
 
         val planWeeksIndexes = plan.weeks.map { it.index }
 
-        if (IndexService.isRebalanceNecessary(planWeeksIndexes)) {
-            IndexService.rebalance(planWeeksIndexes)
-        }
-
         val week = Week.initialize(
             weekIndexes = planWeeksIndexes,
             trainingDays = emptyList()
         )
 
         plan.updateWeeks(plan.weeks + week).also { updatedPlan ->
-            planRepository.upsert(updatedPlan)
+            planWeekRepository.upsertAll(
+                planId = updatedPlan.id,
+                weeks = updatedPlan.weeks
+            )
         }
     }
 
@@ -43,12 +42,11 @@ class PlanWeekApi(
             ?: throw NotFoundException("Plan with id $planId not found")
 
         val weeks = plan.weeks
-
-        val week = plan.weeks.find { it.id == weekId }
+        val week = weeks.find { it.id == weekId }
             ?: throw NotFoundException("Week with id $weekId not found in plan $planId")
 
         val previousWeek = weekIdBefore?.let { id ->
-            plan.weeks.find { it.id == id }
+            weeks.find { it.id == id }
         }
 
         IndexService.moveAndRebalance(
@@ -58,7 +56,10 @@ class PlanWeekApi(
         )
 
         plan.updateWeeks(weeks).let { updatedPlan ->
-            planRepository.upsert(updatedPlan)
+            planWeekRepository.upsertAll(
+                planId = updatedPlan.id,
+                weeks = updatedPlan.weeks
+            )
         }
     }
 

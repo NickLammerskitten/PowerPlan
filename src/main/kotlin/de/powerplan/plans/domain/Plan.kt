@@ -1,5 +1,6 @@
 package de.powerplan.plans.domain
 
+import de.powerplan.shared.IndexService
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import java.util.UUID
@@ -31,6 +32,11 @@ data class Plan(
     }
 
     fun updateWeeks(weeks: List<Week>): Plan {
+        val weekIndexes = weeks.map { it.index }
+        if (IndexService.isRebalanceNecessary(weekIndexes)) {
+            IndexService.rebalance(weekIndexes)
+        }
+
         return this.copy(weeks = weeks)
     }
 

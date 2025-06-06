@@ -8,19 +8,26 @@ import java.util.UUID
 data class TrainingDay(
     val id: UUID,
     val index: Index,
-    val name: String,
+    val name: String? = null,
     val exerciseEntries: List<ExerciseEntry>,
     val type: TrainingType
 ) {
+
+    fun update(
+        name: String? = null
+    ): TrainingDay {
+        return this.copy(name = name)
+    }
+
     companion object {
         fun initialize(
             trainingDayIndexes: List<Index>,
-            name: String?,
+            name: String? = null,
             exerciseEntries: List<ExerciseEntry>,
         ): TrainingDay = TrainingDay(
             id = UUID.randomUUID(),
             index = IndexService.next(trainingDayIndexes),
-            name = name ?: "Training Day ${trainingDayIndexes.size + 1}",
+            name = name,
             exerciseEntries = exerciseEntries,
             type = TrainingType.STRENGTH_TRAINING,
         )
@@ -28,7 +35,7 @@ data class TrainingDay(
         fun create(
             id: UUID,
             index: Index,
-            name: String,
+            name: String? = null,
             exerciseEntries: List<ExerciseEntry>,
             type: TrainingType
         ) = TrainingDay(

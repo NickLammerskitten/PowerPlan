@@ -1,10 +1,9 @@
 package de.powerplan.plans.infrastructure.adapters.rest.requests
 
-import de.powerplan.plans.application.commands.CreateExerciseEntryCommand
+import de.powerplan.plans.application.commands.CreatePlanExerciseEntryCommand
 import de.powerplan.plans.application.commands.CreatePlanCommand
-import de.powerplan.plans.application.commands.CreateSetEntryCommand
-import de.powerplan.plans.application.commands.CreateTrainingDayCommand
-import de.powerplan.plans.application.commands.CreateTrainingWeekCommand
+import de.powerplan.plans.application.commands.CreatePlanTrainingDayCommand
+import de.powerplan.plans.application.commands.CreatePlanTrainingWeekCommand
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.DifficultyLevel
 import de.powerplan.shareddomain.GoalSchemeType
@@ -30,7 +29,7 @@ data class CreatePlanTrainingWeekRequest(
     val trainingDays: List<CreatePlanTrainingDayRequest>,
 ) {
     fun toCommand() =
-        CreateTrainingWeekCommand(
+        CreatePlanTrainingWeekCommand(
             trainingDays = trainingDays.map(CreatePlanTrainingDayRequest::toCommand),
         )
 }
@@ -40,7 +39,7 @@ data class CreatePlanTrainingDayRequest(
     val exercises: List<CreatePlanExerciseEntryRequest>,
 ) {
     fun toCommand() =
-        CreateTrainingDayCommand(
+        CreatePlanTrainingDayCommand(
             name = name,
             exercises = exercises.map(CreatePlanExerciseEntryRequest::toCommand),
         )
@@ -53,7 +52,7 @@ data class CreatePlanExerciseEntryRequest(
     val sets: List<CreateSetEntryRequest>,
 ) {
     fun toCommand() =
-        CreateExerciseEntryCommand(
+        CreatePlanExerciseEntryCommand(
             exerciseId = exerciseId,
             sets = sets.map(CreateSetEntryRequest::toCommand),
             repetitionSchemeType = repetitionSchemeType,

@@ -10,6 +10,17 @@ data class Week(
     val index: Index,
     val trainingDays: List<TrainingDay>,
 ) {
+
+    fun updateTrainingDays(
+        trainingDays: List<TrainingDay>,
+    ): Week {
+        if (IndexService.isRebalanceNecessary(trainingDays.map { it.index })) {
+            IndexService.rebalance(trainingDays.map { it.index })
+        }
+
+        return this.copy(trainingDays = trainingDays)
+    }
+
     companion object {
         fun initialize(
             weekIndexes: List<Index>,

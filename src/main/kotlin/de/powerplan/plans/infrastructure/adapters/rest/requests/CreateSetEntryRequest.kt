@@ -1,6 +1,6 @@
 package de.powerplan.plans.infrastructure.adapters.rest.requests
 
-import de.powerplan.plans.application.commands.CreateSetEntryCommand
+import de.powerplan.plans.application.commands.CreatePlanSetEntryCommand
 
 class CreateSetEntryRequest(
     // repetition
@@ -14,7 +14,7 @@ class CreateSetEntryRequest(
     val percent1RM: Double? = null,
 ) {
     fun toCommand() =
-        CreateSetEntryCommand(
+        CreatePlanSetEntryCommand(
             fixedReps = fixedReps,
             minReps = minReps,
             maxReps = maxReps,

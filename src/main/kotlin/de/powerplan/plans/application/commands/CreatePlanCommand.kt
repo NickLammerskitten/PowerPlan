@@ -17,7 +17,7 @@ class CreatePlanCommand(
     val name: String,
     val difficultyLevel: DifficultyLevel? = null,
     val classifications: List<Classification> = emptyList(),
-    val weeks: List<CreateTrainingWeekCommand>,
+    val weeks: List<CreatePlanTrainingWeekCommand>,
 ) {
     fun toDomain(): Plan {
         val weeks: MutableList<Week> = mutableListOf()
@@ -36,8 +36,8 @@ class CreatePlanCommand(
     }
 }
 
-class CreateTrainingWeekCommand(
-    val trainingDays: List<CreateTrainingDayCommand>,
+class CreatePlanTrainingWeekCommand(
+    val trainingDays: List<CreatePlanTrainingDayCommand>,
 ) {
     fun toDomain(weekIndexes: List<Index>): Week {
         val trainingDays: MutableList<TrainingDay> = mutableListOf()
@@ -55,9 +55,9 @@ class CreateTrainingWeekCommand(
     }
 }
 
-class CreateTrainingDayCommand(
+class CreatePlanTrainingDayCommand(
     val name: String?,
-    val exercises: List<CreateExerciseEntryCommand>,
+    val exercises: List<CreatePlanExerciseEntryCommand>,
 ) {
     fun toDomain(trainingDayIndexes: List<Index>): TrainingDay {
         val exerciseEntries: MutableList<ExerciseEntry> = mutableListOf()
@@ -76,11 +76,11 @@ class CreateTrainingDayCommand(
     }
 }
 
-class CreateExerciseEntryCommand(
+class CreatePlanExerciseEntryCommand(
     val exerciseId: UUID,
     val repetitionSchemeType: RepetitionSchemeType,
     val goalSchemeType: GoalSchemeType,
-    val sets: List<CreateSetEntryCommand>,
+    val sets: List<CreatePlanSetEntryCommand>,
 ) {
     fun toDomain(exerciseIndexes: List<Index>): ExerciseEntry {
         val sets: MutableList<SetEntry> = mutableListOf()
@@ -99,7 +99,7 @@ class CreateExerciseEntryCommand(
     }
 }
 
-class CreateSetEntryCommand(
+class CreatePlanSetEntryCommand(
     // repetition
     val fixedReps: Int? = null,
     val minReps: Int? = null,
