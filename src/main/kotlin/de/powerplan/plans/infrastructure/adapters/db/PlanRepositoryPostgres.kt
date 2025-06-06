@@ -15,6 +15,7 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import org.springframework.stereotype.Repository
 import java.util.UUID
+import kotlin.collections.sortedBy
 
 @Repository
 class PlanRepositoryPostgres(
@@ -218,10 +219,10 @@ class PlanRepositoryPostgres(
                             exerciseEntryDbEntites = exerciseEntryDbEntites,
                             setEntryDbEntities = setEntryDbEntities,
                         )
-                    } ?: emptyList()
+                    }?.sortedBy { it.index.value } ?: emptyList()
 
                 weekDbEntity.toDomain(trainingDays)
-            }
+            }.sortedBy { it.index.value }
 
         return planDbEntity.toDomain(weeks)
     }
@@ -239,10 +240,10 @@ class PlanRepositoryPostgres(
                 val sets =
                     setsByExerciseId[exerciseDbEntity.id]?.map { setDbEntity ->
                         setDbEntity.toDomain()
-                    } ?: emptyList()
+                    }?.sortedBy { it.index.value } ?: emptyList()
 
                 exerciseDbEntity.toDomain(sets)
-            } ?: emptyList()
+            }?.sortedBy { it.index.value } ?: emptyList()
 
         return trainingDayDbEntity.toDomain(exerciseEntries)
     }

@@ -14,6 +14,22 @@ object IndexService {
     private val MAX_VALUE =
         BigInteger.valueOf(BASE.toLong()).pow(PADDING).subtract(BigInteger.ONE)
 
+    fun isRebalanceNecessary(list: List<Index>): Boolean {
+        if (list.isEmpty()) return true
+
+        val sortedList = list.sortedBy { it.value }
+        val firstItem = sortedList.first()
+        val lastItem = sortedList.last()
+        val firstBig = Index.toBigInt(firstItem.value)
+        val lastBig = Index.toBigInt(lastItem.value)
+        val range = lastBig.subtract(firstBig)
+
+        // If the range is larger than the effective range, rebalancing is necessary
+        val bufferSize = MAX_VALUE.multiply(BigInteger.valueOf(10)).divide(BigInteger.valueOf(100))
+        val effectiveRange = MAX_VALUE.subtract(bufferSize.multiply(BigInteger.valueOf(2)))
+        return range > effectiveRange
+    }
+
     /**
      * Create a new Index at the end of `list`.  Does *not* rebalance
      * the rest because you can call rebalance() yourself if you need.
@@ -32,10 +48,7 @@ object IndexService {
 
         val nextBig = lastBig.add(PADDING.toBigInteger())
 
-        if (nextBig > MAX_VALUE) {
-            rebalance(sortedList)
-            return next(sortedList)
-        }
+        check(nextBig <= MAX_VALUE) { "Index overflow" }
 
         val nextStr = Index.fromBigInt(nextBig, PADDING)
         return Index.of(nextStr)

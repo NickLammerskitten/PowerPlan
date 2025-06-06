@@ -23,6 +23,7 @@ class PlanView(
 )
 
 class WeekView(
+    val id: String,
     val index: String,
     val trainingDays: List<TrainingDayView>,
 )
@@ -36,11 +37,14 @@ class TrainingDayView(
 )
 
 class ExerciseEntryView(
+    val id: String,
     val index: String,
     val exercise: ExerciseView,
     val sets: List<SetEntryView>,
 ) {
+
     constructor(exerciseEntry: ExerciseEntry, exerciseName: String) : this(
+        id = exerciseEntry.id.toString(),
         index = exerciseEntry.index.value,
         exercise =
             ExerciseView(
@@ -57,6 +61,7 @@ class ExerciseView(
 )
 
 class SetEntryView(
+    val id: String,
     val index: String,
     val reps: Int?,
     val minReps: Int?,
@@ -67,6 +72,7 @@ class SetEntryView(
     val percent1RM: Double?,
 ) {
     constructor(setEntry: SetEntry) : this(
+        id = setEntry.id.toString(),
         index = setEntry.index.value,
         reps = setEntry.repetitions.getFixedReps(),
         minReps = setEntry.repetitions.getMinReps(),

@@ -30,6 +30,10 @@ data class Plan(
         }
     }
 
+    fun updateWeeks(weeks: List<Week>): Plan {
+        return this.copy(weeks = weeks)
+    }
+
     fun startNew(): Plan {
         val newWeeks =
             weeks.map { week ->
