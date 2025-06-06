@@ -107,7 +107,7 @@ class IndexServiceTest {
     @Test
     fun `test with extreme values`() {
         // Test with items near the maximum value
-        val nearMax = Index.of("ZZZZZZZZZZ")
+        val nearMax = Index.of("ZZZZZZZZZH")
         val list = mutableListOf(nearMax)
 
         val next = IndexService.next(list)

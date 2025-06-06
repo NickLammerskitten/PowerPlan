@@ -1,6 +1,5 @@
 package de.powerplan.workoutSessions.application
 
-import de.powerplan.shared.Index
 import de.powerplan.shared.IndexService
 import de.powerplan.shared.PlanTrainingDayResolver
 import de.powerplan.shared.TrainingType
@@ -186,11 +185,11 @@ class WorkoutSessionApiTest {
     }
 
     @Test
-    fun `finishWorkoutSession throws IllegalArgumentException when no active session exists`() {
+    fun `finishWorkoutSession throws NotFoundException when no active session exists`() {
         runBlocking {
             `when`(workoutSessionRepository.findCurrentActiveSession()).thenReturn(null)
 
-            assertThrows<IllegalArgumentException> {
+            assertThrows<NotFoundException> {
                 workoutSessionApi.finishWorkoutSession()
             }
         }

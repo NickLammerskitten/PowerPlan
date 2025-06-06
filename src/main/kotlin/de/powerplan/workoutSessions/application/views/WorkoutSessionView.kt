@@ -6,17 +6,17 @@ import java.time.LocalDateTime
 class WorkoutSessionView(
     val id: String,
     val trainingDayId: String,
-    val trainingDayName: String,
+    val trainingDayName: String? = null,
     val exerciseEntries: List<ExerciseEntryView>,
     val startTime: LocalDateTime,
     val duration: Int?,
-    val notes: String?,
+    val notes: String?
 )
 
 class ExerciseEntryView(
     val exerciseEntryId: String,
     val exerciseId: String,
-    val sets: List<SetEntryView>,
+    val sets: List<SetEntryView>
 )
 
 class SetEntryView(
@@ -28,7 +28,7 @@ class SetEntryView(
     val minRpe: Double?,
     val maxRpe: Double?,
     val percent1RM: Double?,
-    val workoutSetEntry: WorkoutSetEntryView?,
+    val workoutSetEntry: WorkoutSetEntryView?
 ) {
     constructor(setEntry: SetEntry, workoutSetEntryView: WorkoutSetEntryView?) : this(
         setEntryId = setEntry.id.toString(),

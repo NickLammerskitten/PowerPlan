@@ -14,7 +14,7 @@ class TrainingDayDbEntity(
     val plansWeeksId: String,
     val id: String,
     val index: String,
-    val name: String,
+    val name: String? = null,
     val type: TrainingType
 ) {
     fun toDomain(exerciseEntries: List<ExerciseEntry>): TrainingDay =

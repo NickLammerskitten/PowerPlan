@@ -14,7 +14,7 @@ class PlanListView(
 
 class PlanView(
     val id: String,
-    val name: String,
+    val name: String?,
     val difficultyLevel: String?,
     val classifications: List<String>,
     val weeks: List<WeekView>,
@@ -31,7 +31,7 @@ class WeekView(
 class TrainingDayView(
     val id: String,
     val index: String,
-    val name: String,
+    val name: String? = null,
     val exerciseEntries: List<ExerciseEntryView>,
     val type: String,
 )
