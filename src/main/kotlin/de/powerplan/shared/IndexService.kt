@@ -25,11 +25,18 @@ object IndexService {
             return Index.of(Index.fromBigInt(mid, PADDING))
         }
 
-        val lastBig = list.maxOf { Index.toBigInt(it.value) }
+        val sortedList = list.sortedBy { it.value }
 
-        // place the next one at (last + midGap)
-        val gap = MAX_VALUE.divide(BigInteger.valueOf((list.size + 1).toLong()))
-        val nextBig = lastBig + gap
+        val lastItem = sortedList.last()
+        val lastBig = Index.toBigInt(lastItem.value)
+
+        val nextBig = lastBig.add(PADDING.toBigInteger())
+
+        if (nextBig > MAX_VALUE) {
+            rebalance(sortedList)
+            return next(sortedList)
+        }
+
         val nextStr = Index.fromBigInt(nextBig, PADDING)
         return Index.of(nextStr)
     }
@@ -39,26 +46,30 @@ object IndexService {
      * then rebalance all entries to avoid any collision.
      */
     fun moveAndRebalance(
-        list: MutableList<Index>,
+        list: List<Index>,
         item: Index,
         previous: Index?
     ) {
-        require(list.remove(item)) {
+        val sortedList = list.sortedBy { it.value }.toMutableList()
+
+        require(sortedList.remove(item)) {
             "Item to move not found in list"
         }
 
         val insertPos = when (previous) {
             null -> 0
             else -> {
-                val idx = list.indexOf(previous)
+                val idx = sortedList.indexOf(previous)
                 require(idx >= 0) { "Previous element not found in list" }
                 idx + 1
             }
         }
 
-        list.add(insertPos, item)
+        sortedList.add(insertPos, item)
 
-        rebalance(list)
+        rebalance(sortedList)
+
+        sortedList.sortBy { it.value }
     }
 
     /**
@@ -68,21 +79,27 @@ object IndexService {
         val n = list.size
         if (n == 0) return
 
+        val bufferSize = MAX_VALUE.multiply(BigInteger.valueOf(10)).divide(BigInteger.valueOf(100))
+        val effectiveMin = bufferSize
+        val effectiveMax = MAX_VALUE.subtract(bufferSize)
+        val effectiveRange = effectiveMax.subtract(effectiveMin)
+
         when (n) {
             1 -> {
-                // a single item sits in the middle
-                val mid = MAX_VALUE.divide(BigInteger.valueOf(2))
+                // a single item sits in the middle of the effective range
+                val mid = effectiveMin.add(effectiveRange.divide(BigInteger.valueOf(2)))
                 list[0].updateValue(Index.fromBigInt(mid, PADDING))
             }
 
             else -> {
-                // for i in [0..n-1]: value = i * MAX_VALUE/(n-1)
+                // Distribute values evenly within the effective range
                 val denom = BigInteger.valueOf((n - 1).toLong())
                 for ((i, idx) in list.withIndex()) {
                     val num = BigInteger.valueOf(i.toLong())
-                        .multiply(MAX_VALUE)
+                        .multiply(effectiveRange)
                         .divide(denom)
-                    idx.updateValue(Index.fromBigInt(num, PADDING))
+                    val value = effectiveMin.add(num)
+                    idx.updateValue(Index.fromBigInt(value, PADDING))
                 }
             }
         }

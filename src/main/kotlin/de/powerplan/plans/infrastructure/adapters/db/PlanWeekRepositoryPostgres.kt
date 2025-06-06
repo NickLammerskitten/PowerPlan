@@ -19,6 +19,12 @@ class PlanWeekRepositoryPostgres(
         dataSource.from("plans_weeks").upsert(weekDbEntity)
     }
 
+    override suspend fun upsertAll(planId: UUID, weeks: List<Week>) {
+        val weekDbEntities = weeks.map { it.toDbEntity(planId) }
+
+        dataSource.from("plans_weeks").upsert(weekDbEntities)
+    }
+
     override suspend fun delete(weekId: UUID) {
         dataSource.from("plans_weeks").delete {
             filter {

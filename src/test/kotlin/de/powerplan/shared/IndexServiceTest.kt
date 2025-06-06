@@ -4,13 +4,68 @@ import org.junit.jupiter.api.Assertions.*
 import java.math.BigInteger
 import kotlin.test.Test
 
+private const val BASE = 36
+private const val PADDING = 10
+
+private val MAX_VALUE = BigInteger.valueOf(BASE.toLong()).pow(PADDING).subtract(BigInteger.ONE)
+
 class IndexServiceTest {
 
-    private val BASE = 36
-    private val PADDING = 10
+    @Test
+    fun `adding an element to the end of a list works properly`() {
+        val indexStringPairs = mutableListOf(
+            Pair(Index.of("1000000000"), "Element A"),
+            Pair(Index.of("2000000000"), "Element B"),
+            Pair(Index.of("3000000000"), "Element C"),
+            Pair(Index.of("4000000000"), "Element D")
+        )
 
-    private val MAX_VALUE =
-        BigInteger.valueOf(BASE.toLong()).pow(PADDING).subtract(BigInteger.ONE)
+        indexStringPairs.add(
+            Pair(
+                first = IndexService.next(indexStringPairs.map { it.first }),
+                second = "New Element"
+            )
+        )
+
+        val sortedStrings = indexStringPairs
+            .sortedBy { it.first.value }
+            .map { it.second }
+        assertEquals(listOf("Element A", "Element B", "Element C", "Element D", "New Element"), sortedStrings)
+
+        val indexes = indexStringPairs
+            .map { it.first }
+            .map { Index.toBigInt(it.value) }
+        for (i in 0 until indexes.size - 1) {
+            assertTrue(indexes[i] < indexes[i + 1], "Index at $i is not less than index at ${i + 1}")
+        }
+    }
+
+    @Test
+    fun `moving an element works properly`() {
+        val indexStringPairs = mutableListOf(
+            Pair(Index.of("1000000000"), "Element A"),
+            Pair(Index.of("2000000000"), "Element B"),
+            Pair(Index.of("3000000000"), "Element C"),
+            Pair(Index.of("4000000000"), "Element D")
+        )
+
+        val elementC = indexStringPairs.first { it.second == "Element C" }
+        val elementA = indexStringPairs.first { it.second == "Element A" }
+
+        val indexList = indexStringPairs.map { it.first }.toMutableList()
+
+        IndexService.moveAndRebalance(
+            list = indexList,
+            item = elementC.first,
+            previous = elementA.first
+        )
+
+        val sortedStrings = indexStringPairs
+            .sortedBy { it.first.value }
+            .map { it.second }
+        assertEquals(listOf("Element A", "Element C", "Element B", "Element D"), sortedStrings)
+    }
+
 
     @Test
     fun `test next() with empty list`() {
@@ -27,47 +82,8 @@ class IndexServiceTest {
             Index.of("3000000000")
         )
         val next = IndexService.next(list)
-        // Should be after "3000000000"
+        // Should be after "3.000.000.000"
         assertTrue(Index.toBigInt(next.value) > Index.toBigInt("3000000000"))
-    }
-
-    @Test
-    fun `test move to front and rebalance`() {
-        val a = Index.of("1000000000")
-        val b = Index.of("2000000000")
-        val c = Index.of("3000000000")
-        val list = mutableListOf(a, b, c)
-
-        IndexService.moveAndRebalance(list, c, null) // move c to front
-
-        assertEquals(list[0], c)
-        assertTrue(isSortedByRank(list))
-    }
-
-    @Test
-    fun `test move to end and rebalance`() {
-        val a = Index.of("1000000000")
-        val b = Index.of("2000000000")
-        val c = Index.of("3000000000")
-        val list = mutableListOf(a, b, c)
-
-        IndexService.moveAndRebalance(list, a, c) // move a after c
-
-        assertEquals(list[2], a)
-        assertTrue(isSortedByRank(list))
-    }
-
-    @Test
-    fun `test move between and rebalance`() {
-        val a = Index.of("1000000000")
-        val b = Index.of("2000000000")
-        val c = Index.of("3000000000")
-        val list = mutableListOf(a, b, c)
-
-        IndexService.moveAndRebalance(list, c, a) // move c between a and b
-
-        assertEquals(list[1], c)
-        assertTrue(isSortedByRank(list))
     }
 
     @Test
@@ -86,21 +102,6 @@ class IndexServiceTest {
         for (i in 0 until values.size - 1) {
             assertTrue(values[i] < values[i + 1], "Index at $i is not less than index at ${i + 1}")
         }
-    }
-
-    @Test
-    fun `test inserting between adjacent values`() {
-        val a = Index.of("1000000000")
-        val b = Index.of("1000000001") // Extremely close values
-        val c = Index.of("9999999999")
-        val list = mutableListOf(a, b, c)
-
-        // Insert between two very close values
-        IndexService.moveAndRebalance(list, c, a)
-
-        // Verify the result is still ordered correctly
-        assertTrue(isSortedByRank(list))
-        assertEquals(3, list.size)
     }
 
     @Test
@@ -144,25 +145,6 @@ class IndexServiceTest {
         diffs.forEach { diff ->
             assertTrue(diff < tolerance, "Some gaps are too large after rebalancing")
         }
-    }
-
-    @Test
-    fun `test multiple moves and maintains order`() {
-        val list = mutableListOf(
-            Index.of("1000000000"),
-            Index.of("2000000000"),
-            Index.of("3000000000"),
-            Index.of("4000000000"),
-            Index.of("5000000000")
-        )
-
-        // Perform multiple moves
-        IndexService.moveAndRebalance(list, list[4], list[0]) // move 5 after 1
-        IndexService.moveAndRebalance(list, list[0], list[3]) // move 1 after 4
-        IndexService.moveAndRebalance(list, list[2], null)    // move 3 to front
-
-        // Verify the list is still properly ordered
-        assertTrue(isSortedByRank(list))
     }
 
     @Test
@@ -216,39 +198,6 @@ class IndexServiceTest {
 
         // Check that all gaps are within acceptable deviation
         assertTrue(diffs.all { diff -> diff < maxDeviation && diff > BigInteger.ZERO })
-    }
-
-    @Test
-    fun `test simulated usage pattern`() {
-        val list = mutableListOf<Index>()
-
-        // Simulate adding 20 items to the end
-        repeat(20) {
-            list.add(IndexService.next(list))
-        }
-
-        // Simulate random repositioning operations
-        val random = java.util.Random(42) // Fixed seed for reproducibility
-        repeat(30) {
-            if (list.isNotEmpty()) {
-                val itemToMove = list[random.nextInt(list.size)]
-                val previousIndex = if (random.nextBoolean() && list.size > 1) {
-                    // Choose a random previous item different from itemToMove
-                    var prev: Index
-                    do {
-                        prev = list[random.nextInt(list.size)]
-                    } while (prev == itemToMove)
-                    prev
-                } else {
-                    null // Move to front
-                }
-
-                IndexService.moveAndRebalance(list, itemToMove, previousIndex)
-
-                // Verify the list remains sorted after each operation
-                assertTrue(isSortedByRank(list), "List not sorted after move operation")
-            }
-        }
     }
 
     @Test

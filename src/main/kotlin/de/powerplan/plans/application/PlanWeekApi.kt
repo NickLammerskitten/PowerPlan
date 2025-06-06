@@ -24,9 +24,11 @@ class PlanWeekApi(
             trainingDays = emptyList()
         )
 
-        planWeekRepository.upsert(
+        val weeks = plan.weeks + week
+
+        planWeekRepository.upsertAll(
             planId = planId,
-            week = week
+            weeks = weeks
         )
     }
 
