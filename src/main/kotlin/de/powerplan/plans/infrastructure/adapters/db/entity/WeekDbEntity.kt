@@ -2,7 +2,6 @@ package de.powerplan.plans.infrastructure.adapters.db.entity
 
 import de.powerplan.plans.domain.Week
 import de.powerplan.shared.Index
-import de.powerplan.shared.IndexService
 import de.powerplan.shareddomain.TrainingDay
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -18,8 +18,8 @@ class PlanSetRepositoryPostgres(
         dataSource.from("plans_sets").upsert(planSetDbEntity)
     }
 
-    override suspend fun upsertAll(planExerciseId: UUID, planSets: List<SetEntry>) {
-        val planSetsDbEntities = planSets.map { it.toDbEntity(planExerciseId) }
+    override suspend fun upsertAll(planSetId: UUID, planSets: List<SetEntry>) {
+        val planSetsDbEntities = planSets.map { it.toDbEntity(planSetId) }
 
         dataSource.from("plans_sets").upsert(planSetsDbEntities)
     }
