@@ -10,6 +10,14 @@ data class SetEntry(
     val repetitions: RepetitionScheme,
     val goal: GoalScheme,
 ) {
+
+    fun update(
+        repetitions: RepetitionScheme = this.repetitions,
+        goal: GoalScheme = this.goal,
+    ): SetEntry {
+        return this.copy(repetitions = repetitions, goal = goal)
+    }
+
     companion object {
         fun initialize(
             setIndexes: List<Index>,
