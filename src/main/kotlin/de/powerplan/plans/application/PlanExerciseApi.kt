@@ -43,21 +43,21 @@ class PlanExerciseApi(
 
     suspend fun moveExerciseEntry(
         planId: UUID,
-        exerciseId: UUID,
-        exerciseIdBefore: UUID? = null
+        exerciseEntryId: UUID,
+        exerciseEntryIdBefore: UUID? = null
     ) {
         val plan = planViewRepository.findById(planId)
             ?: throw NotFoundException("Plan with id $planId not found")
         val trainingDays = plan.weeks.flatMap { it.trainingDays }
         val trainingDay = trainingDays.find { trainingDay ->
             trainingDay.exerciseEntries.any { exerciseEntry ->
-                exerciseEntry.id == exerciseId
+                exerciseEntry.id == exerciseEntryId
             }
-        } ?: throw NotFoundException("Exercise entry with id $exerciseId not found in plan $planId")
+        } ?: throw NotFoundException("Exercise entry with id $exerciseEntryId not found in plan $planId")
 
-        val exerciseEntry = trainingDay.exerciseEntries.find { it.id == exerciseId }
-            ?: throw NotFoundException("Exercise entry with id $exerciseId not found in plan $planId")
-        val exerciseEntryBefore = trainingDay.exerciseEntries.find { it.id == exerciseIdBefore }
+        val exerciseEntry = trainingDay.exerciseEntries.find { it.id == exerciseEntryId }
+            ?: throw NotFoundException("Exercise entry with id $exerciseEntryId not found in plan $planId")
+        val exerciseEntryBefore = trainingDay.exerciseEntries.find { it.id == exerciseEntryIdBefore }
 
         IndexService.moveAndRebalance(
             list = trainingDay.exerciseEntries.map { it.index },
