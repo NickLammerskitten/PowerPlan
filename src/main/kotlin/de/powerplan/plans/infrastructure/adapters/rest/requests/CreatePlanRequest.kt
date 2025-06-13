@@ -2,6 +2,7 @@ package de.powerplan.plans.infrastructure.adapters.rest.requests
 
 import de.powerplan.plans.application.commands.CreatePlanExerciseEntryCommand
 import de.powerplan.plans.application.commands.CreatePlanCommand
+import de.powerplan.plans.application.commands.CreatePlanSetEntryCommand
 import de.powerplan.plans.application.commands.CreatePlanTrainingDayCommand
 import de.powerplan.plans.application.commands.CreatePlanTrainingWeekCommand
 import de.powerplan.shareddomain.Classification
@@ -49,13 +50,38 @@ data class CreatePlanExerciseEntryRequest(
     val exerciseId: UUID,
     val repetitionSchemeType: RepetitionSchemeType,
     val goalSchemeType: GoalSchemeType,
-    val sets: List<CreateSetEntryRequest>,
+    val sets: List<CreatePlanSetEntryRequest>,
 ) {
     fun toCommand() =
         CreatePlanExerciseEntryCommand(
             exerciseId = exerciseId,
-            sets = sets.map(CreateSetEntryRequest::toCommand),
+            sets = sets.map(CreatePlanSetEntryRequest::toCommand),
             repetitionSchemeType = repetitionSchemeType,
             goalSchemeType = goalSchemeType,
+        )
+}
+
+data class CreatePlanSetEntryRequest(
+    // repetition
+    val repetitionSchemeType: RepetitionSchemeType,
+    val fixedReps: Int? = null,
+    val minReps: Int? = null,
+    val maxReps: Int? = null,
+    // goal
+    val goalSchemeType: GoalSchemeType,
+    val rpe: Double? = null,
+    val minRpe: Double? = null,
+    val maxRpe: Double? = null,
+    val percent1RM: Double? = null,
+) {
+    fun toCommand() =
+        CreatePlanSetEntryCommand(
+            fixedReps = fixedReps,
+            minReps = minReps,
+            maxReps = maxReps,
+            rpe = rpe,
+            minRpe = minRpe,
+            maxRpe = maxRpe,
+            percent1RM = percent1RM,
         )
 }
