@@ -2,19 +2,15 @@ package de.powerplan.plans.application
 
 import de.powerplan.exercises.application.DefaultExerciseViewResolver
 import de.powerplan.plans.application.commands.CreatePlanCommand
-import de.powerplan.plans.application.views.ExerciseEntryView
-import de.powerplan.plans.application.views.PlanListView
-import de.powerplan.plans.application.views.PlanView
-import de.powerplan.plans.application.views.TrainingDayView
-import de.powerplan.plans.application.views.WeekView
+import de.powerplan.plans.application.views.*
 import de.powerplan.plans.application.views.query.PlanQueryFilters
 import de.powerplan.plans.domain.Plan
 import de.powerplan.plans.domain.PlanRepository
 import de.powerplan.shareddomain.Classification
 import de.powerplan.shareddomain.TrainingDay
-import io.ktor.server.plugins.NotFoundException
+import io.ktor.server.plugins.*
 import org.springframework.stereotype.Component
-import java.util.UUID
+import java.util.*
 
 @Component
 class PlanApi(
@@ -23,7 +19,7 @@ class PlanApi(
     private val planViewRepository: PlanViewRepository,
 ) {
     suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
-        val id = planRepository.upsert(createPlanCommand.toDomain())
+        val id = planRepository.create(createPlanCommand.toDomain())
         return planToView(
             planViewRepository.findById(id) ?: throw NotFoundException(
                 "Plan with id $id not found"
@@ -66,8 +62,7 @@ class PlanApi(
 
         val newPlan = plan.startNew()
 
-
-        val id = planRepository.upsert(newPlan)
+        val id = planRepository.create(newPlan)
         return planToView(
             planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         )
@@ -77,8 +72,8 @@ class PlanApi(
         val plan = planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
 
         plan.finish()
+        planRepository.upsert(plan)
 
-        val id = planRepository.upsert(plan)
         return planToView(
             planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         )

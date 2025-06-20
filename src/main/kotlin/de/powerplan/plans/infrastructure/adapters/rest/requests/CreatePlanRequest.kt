@@ -48,16 +48,12 @@ data class CreatePlanTrainingDayRequest(
 
 data class CreatePlanExerciseEntryRequest(
     val exerciseId: UUID,
-    val repetitionSchemeType: RepetitionSchemeType,
-    val goalSchemeType: GoalSchemeType,
     val sets: List<CreatePlanSetEntryRequest>,
 ) {
     fun toCommand() =
         CreatePlanExerciseEntryCommand(
             exerciseId = exerciseId,
-            sets = sets.map(CreatePlanSetEntryRequest::toCommand),
-            repetitionSchemeType = repetitionSchemeType,
-            goalSchemeType = goalSchemeType,
+            sets = sets.map(CreatePlanSetEntryRequest::toCommand)
         )
 }
 
@@ -76,9 +72,11 @@ data class CreatePlanSetEntryRequest(
 ) {
     fun toCommand() =
         CreatePlanSetEntryCommand(
+            repetitionSchemeType = repetitionSchemeType,
             fixedReps = fixedReps,
             minReps = minReps,
             maxReps = maxReps,
+            goalSchemeType = goalSchemeType,
             rpe = rpe,
             minRpe = minRpe,
             maxRpe = maxRpe,

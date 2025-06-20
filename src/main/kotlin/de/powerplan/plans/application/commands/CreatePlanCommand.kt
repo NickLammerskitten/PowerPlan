@@ -78,8 +78,6 @@ class CreatePlanTrainingDayCommand(
 
 class CreatePlanExerciseEntryCommand(
     val exerciseId: UUID,
-    val repetitionSchemeType: RepetitionSchemeType,
-    val goalSchemeType: GoalSchemeType,
     val sets: List<CreatePlanSetEntryCommand>,
 ) {
     fun toDomain(exerciseIndexes: List<Index>): ExerciseEntry {
@@ -87,7 +85,7 @@ class CreatePlanExerciseEntryCommand(
 
         this.sets.map { createSetEntryCommand ->
             val setIndexes = sets.map { it.index }
-            val setEntry = createSetEntryCommand.toDomain(setIndexes, repetitionSchemeType, goalSchemeType)
+            val setEntry = createSetEntryCommand.toDomain(setIndexes)
             sets.add(setEntry)
         }
 
@@ -101,10 +99,12 @@ class CreatePlanExerciseEntryCommand(
 
 class CreatePlanSetEntryCommand(
     // repetition
+    val repetitionSchemeType: RepetitionSchemeType,
     val fixedReps: Int? = null,
     val minReps: Int? = null,
     val maxReps: Int? = null,
     // goal
+    val goalSchemeType: GoalSchemeType,
     val rpe: Double? = null,
     val minRpe: Double? = null,
     val maxRpe: Double? = null,
@@ -112,9 +112,8 @@ class CreatePlanSetEntryCommand(
 ) {
     fun toDomain(
         setIndexes: List<Index>,
-        repetitionSchemeType: RepetitionSchemeType,
-        goalSchemeType: GoalSchemeType,
-    ): SetEntry =
+
+        ): SetEntry =
         SetEntry.initialize(
             setIndexes = setIndexes,
             repetitions =
