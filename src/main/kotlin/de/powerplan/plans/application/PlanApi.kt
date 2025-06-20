@@ -19,7 +19,7 @@ class PlanApi(
     private val planViewRepository: PlanViewRepository,
 ) {
     suspend fun createPlan(createPlanCommand: CreatePlanCommand): PlanView {
-        val id = planRepository.create(createPlanCommand.toDomain())
+        val id = planRepository.createFullPlan(createPlanCommand.toDomain())
         return planToView(
             planViewRepository.findById(id) ?: throw NotFoundException(
                 "Plan with id $id not found"
@@ -62,7 +62,7 @@ class PlanApi(
 
         val newPlan = plan.startNew()
 
-        val id = planRepository.create(newPlan)
+        val id = planRepository.createFullPlan(newPlan)
         return planToView(
             planViewRepository.findById(id) ?: throw NotFoundException("Plan with id $id not found")
         )

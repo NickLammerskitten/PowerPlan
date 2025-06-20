@@ -6,6 +6,7 @@ import de.powerplan.plans.infrastructure.adapters.db.entity.PlanDbEntity
 import de.powerplan.plans.infrastructure.adapters.db.entity.toDbEntity
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
@@ -13,16 +14,17 @@ import java.util.UUID
 class PlanRepositoryPostgres(
     private val dataSource: SupabaseClient,
 ) : PlanRepository {
-    override suspend fun upsert(plan: Plan): UUID {
+    override suspend fun createFullPlan(plan: Plan): UUID {
         val planDbEntityDto = plan.toDbEntity()
-        val id = dataSource.from("plans").upsert(planDbEntityDto)
-            .decodeSingleOrNull<PlanDbEntity>()?.id
-            ?: throw IllegalStateException("Failed to upsert plan")
+        val data = dataSource.from("plans").insert(planDbEntityDto, request = {
+            select(Columns.ALL)
+        }).decodeSingle<PlanDbEntity>()
 
+        val planId = UUID.fromString(data.id)
 
         val weeksDbEntitiesDto =
             plan.weeks.map {
-                it.toDbEntity(planId = plan.id)
+                it.toDbEntity(planId = planId)
             }
         dataSource.from("plans_weeks").upsert(weeksDbEntitiesDto)
 
@@ -56,7 +58,17 @@ class PlanRepositoryPostgres(
             }
         dataSource.from("plans_sets").upsert(setsDbEntitiesDto)
 
-        return UUID.fromString(id)
+        return planId
+    }
+
+    override suspend fun upsert(plan: Plan) {
+        val planDbEntityDto = plan.toDbEntity()
+        dataSource.from("plans").upsert(
+            value = planDbEntityDto,
+            request = {
+                select(Columns.ALL)
+            }
+        )
     }
 
     override suspend fun delete(id: UUID) {
